@@ -34,17 +34,18 @@ module.exports = {
       const canvas = createCanvas(800, 200);
       const ctx = canvas.getContext("2d");
 
-      // Create a custom background
-      ctx.fillStyle = "#7289DA"; // Discord blurple
+      // Simple background
+      ctx.fillStyle = "#7289DA"; // Blurple background
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Set text properties
-      ctx.font = "30px cursive"; // Enlarged and cursive font for the quote
+      // Set text properties for the quote
+      ctx.font = "bold 40px 'Brush Script MT'"; // Bold and cursive font for the quote
       ctx.fillStyle = "#FFFFFF"; // White text color
       ctx.textAlign = "center";
-      ctx.fillText(`"${randomQuote.quoteName}"`, canvas.width / 2, 80);
-      ctx.font = "24px cursive"; // Enlarged and cursive font for the username
-      ctx.fillText(`- ${user.username}`, canvas.width / 2, 120);
+      ctx.fillText(`"${randomQuote.quoteName}"`, canvas.width / 2, 100);
+      // Set text properties for the username
+      ctx.font = "italic 30px 'Brush Script MT'"; // Italic and cursive font for the username
+      ctx.fillText(`- ${user.username}`, canvas.width / 2, 150);
 
       const attachment = new AttachmentBuilder(canvas.toBuffer(), {
         name: "quote.png",
