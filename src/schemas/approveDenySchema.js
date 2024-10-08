@@ -3,21 +3,31 @@ const mongoose = require("mongoose");
 const approveDenySchema = new mongoose.Schema({
   userId: {
     type: String,
+    required: true,
   },
   quoteId: {
     type: String,
+    required: true,
   },
   quoteName: {
     type: String,
+    required: true,
   },
   category: {
     type: String,
+    required: true,
   },
-  approve: {
-    type: String,
+  approved: {
+    type: Boolean,
+    default: false,
   },
-  deny: {
-    type: String,
+  denied: {
+    type: Boolean,
+    default: false,
+  },
+  rating: {
+    type: Number,
+    default: 0,
   },
 });
 

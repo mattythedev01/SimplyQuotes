@@ -56,7 +56,7 @@ module.exports = {
       return;
     }
 
-    // Always create a new entry for approved quotes
+    // Always create a new entry for approved quotes and initialize the rating
     await userSchema.create({
       userID: quoteData.userId,
       quoteID: quoteData.quoteId,
@@ -64,6 +64,7 @@ module.exports = {
       category: quoteData.category,
       numberOfQuotes: 1, // Assuming starting count, adjust logic as needed for incrementing
       createdAt: new Date(),
+      rating: 0, // Initialize rating to 0
     });
 
     // Send a DM to the user who created the quote

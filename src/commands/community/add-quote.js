@@ -63,6 +63,7 @@ module.exports = {
       quoteId: quoteId,
       quoteName: quote,
       category: category,
+      rating: 0,
     });
     await quoteEntry.save();
 
