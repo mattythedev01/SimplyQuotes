@@ -15,43 +15,41 @@ module.exports = {
 
   run: async (client, interaction) => {
     try {
-      const commandsDirectory = path.join(__dirname, "../");
-      const commandFiles = fs
-        .readdirSync(commandsDirectory, { withFileTypes: true })
-        .flatMap((dirent) => {
-          if (dirent.isDirectory()) {
-            return fs
-              .readdirSync(path.join(commandsDirectory, dirent.name))
-              .map((file) => ({ file, folder: dirent.name }));
-          }
-          return { file: dirent.name, folder: null };
-        })
-        .filter((dirent) => dirent.file.endsWith(".js"))
-        .map((dirent) => {
-          const commandName = dirent.file.replace(".js", "");
-          const command = require(path.join(
-            commandsDirectory,
-            dirent.folder || "",
-            dirent.file
-          ));
-          const description = command.data.description;
-          return {
-            name: `/${commandName}`,
-            value: `${description} (Located in: ${dirent.folder || "root"})`,
-            inline: true, // Set inline to true for each field
-          };
-        });
+      // Read command files from each command folder and generate command list
+      const commandFolders = fs.readdirSync(
+        path.join(__dirname, "../../commands")
+      );
+      let commandsList = [];
+      commandFolders.forEach((folder) => {
+        const commandFiles = fs
+          .readdirSync(path.join(__dirname, "../../commands", folder))
+          .filter((file) => file.endsWith(".js"));
+        commandsList = commandsList.concat(
+          commandFiles.map((file) => file.slice(0, -3))
+        );
+      });
+      const commandsString = commandsList
+        .map((command) => `\`${command}\``)
+        .join("\n");
 
       const helpEmbed = new EmbedBuilder()
-        .setColor("#4A5EAD")
-        .setTitle("🌟 Help: Available Commands 🌟")
-        .setDescription(
-          "Below is a list of all commands you can use. Each command includes a brief description and its location within the project structure."
+        .setColor("#5865F2") // Discord Blurple
+        .setTitle("🌟 Help: All Commands 🌟")
+        .setDescription(`Explore the commands you can use!`)
+        .addFields(
+          {
+            name: "Commands",
+            value: commandsString || "No commands available.",
+            inline: true,
+          },
+          {
+            name: "How to use",
+            value: "Type `/command` for more details on each command.",
+            inline: true,
+          }
         )
-        .addFields(commandFiles)
         .setFooter({
-          text: `Total commands available: ${commandFiles.length}`,
-          iconURL: interaction.user.displayAvatarURL(),
+          text: `Help command is still a WIP, more features will be added soon to it.`,
         })
         .setTimestamp()
         .setThumbnail(client.user.displayAvatarURL());
