@@ -24,6 +24,12 @@ module.exports = {
         .setDescription("The new role to ping for quotes.")
         .setRequired(false)
     )
+    .addBooleanOption((o) =>
+      o
+        .setName("qotd")
+        .setDescription("Enable or disable quote of the day.")
+        .setRequired(false)
+    )
     .toJSON(),
   userPermissions: [PermissionFlagsBits.Administrator],
   botPermissions: [],
@@ -32,6 +38,7 @@ module.exports = {
     const { options, guildId } = interaction;
     const role = options.getRole("role");
     const channel = options.getChannel("channel");
+    const quoteOfTheDayEnabled = options.getBoolean("qotd");
 
     const rEmbed = new EmbedBuilder().setFooter({
       iconURL: `${client.user.displayAvatarURL({ dynamic: true })}`,
@@ -53,6 +60,9 @@ module.exports = {
     if (role) {
       data.roleID = role.id;
     }
+    if (quoteOfTheDayEnabled !== null) {
+      data.quoteOfTheDay = quoteOfTheDayEnabled;
+    }
 
     await data.save();
     rEmbed
@@ -60,7 +70,10 @@ module.exports = {
       .setDescription(
         `✅ Successfully updated the quote setup.` +
           (channel ? ` Channel set to ${channel}.` : "") +
-          (role ? ` Role set to ${role}.` : "")
+          (role ? ` Role set to ${role}.` : "") +
+          (quoteOfTheDayEnabled !== null
+            ? ` Quote of the Day enabled: ${quoteOfTheDayEnabled}.`
+            : "")
       );
     interaction.reply({ embeds: [rEmbed], ephemeral: true });
   },

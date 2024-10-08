@@ -5,6 +5,7 @@ const quoteSetupSchema = new Schema({
   channelID: String,
   roleID: String,
   quoteChallengeChannelID: String, // Added new field as per instruction
+  quoteOfTheDay: String, // Field to store the quote of the day
 });
 
 module.exports = model("QuoteSetup", quoteSetupSchema);
