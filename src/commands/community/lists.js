@@ -28,7 +28,7 @@ module.exports = {
             const user = await client.users.fetch(quote.userID);
             return `${index + 1}. "${quote.quoteName}" - ${user.username} (${
               quote.userID
-            })`;
+            })\n> ||[Quote ID: ${quote.quoteID}]||`;
           })
         );
 
