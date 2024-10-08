@@ -1,1 +1,11 @@
-Finish Add quote of the day
+-- SimplyQoutes
+    : SimplyQoutes todo list
+    -- New Features
+        - Profile count - Shows how much qoutes a certain user has in the database and ratings
+        - Qoute trival - Generates existing qoutes and the category wont be shown, and you have to guess what category the qoute belongs to.
+        - Popular category - Shows the top 3 categories with the most qoutes in the db.
+        - Tell me a story command - Generates a unique story using pre-existant quotes from the database.
+        - Finish QOTD system
+        - Do some API stuff/integrations
+    --/
+--/
