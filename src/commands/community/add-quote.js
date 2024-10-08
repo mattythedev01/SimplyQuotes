@@ -55,17 +55,18 @@ module.exports = {
       return;
     }
 
-    // Log the category and userId to the user schema with quoteName as "None yet"
+    // Generate a unique 12 character ID for the quote
+    const quoteId = uuidv4().slice(0, 12);
+
+    // Log the category, userId, and quoteId to the user schema
     const userUpdate = new userSchema({
       userID: userId,
+      quoteID: quoteId, // Log the unique quote ID
       quoteName: "None yet", // Set quoteName to "None yet" as per instruction
       category: category,
       createdAt: new Date(), // Log the time and date when the category was added
     });
     await userUpdate.save();
-
-    // Generate a unique ID for the quote
-    const quoteId = uuidv4();
 
     // Log the quote and userId to the approveDeny schema
     const quoteEntry = new approveDenySchema({
