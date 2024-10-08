@@ -56,22 +56,15 @@ module.exports = {
       return;
     }
 
-    // Find the user in the userSchema and update the quoteName
-    const existingUser = await userSchema.findOne({ userID: quoteData.userId });
-    if (existingUser) {
-      await userSchema.updateOne(
-        { userID: quoteData.userId },
-        { $set: { quoteName: quoteData.quoteName } }
-      );
-    } else {
-      // If user does not exist, create a new entry
-      const newUser = new userSchema({
-        userID: quoteData.userId,
-        quoteName: quoteData.quoteName,
-        createdAt: new Date(),
-      });
-      await newUser.save();
-    }
+    // Always create a new entry for approved quotes
+    await userSchema.create({
+      userID: quoteData.userId,
+      quoteID: quoteData.quoteId,
+      quoteName: quoteData.quoteName,
+      category: quoteData.category,
+      numberOfQuotes: 1, // Assuming starting count, adjust logic as needed for incrementing
+      createdAt: new Date(),
+    });
 
     // Send a DM to the user who created the quote
     const user = await client.users.fetch(quoteData.userId);

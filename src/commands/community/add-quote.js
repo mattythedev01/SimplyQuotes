@@ -3,7 +3,6 @@ const {
   PermissionFlagsBits,
   EmbedBuilder,
 } = require("discord.js");
-const userSchema = require("../../schemas/userSchema");
 const approveDenySchema = require("../../schemas/approveDenySchema");
 const quoteSetupSchema = require("../../schemas/quoteSetupsSchema");
 const mConfig = require("../../messageConfig.json");
@@ -58,21 +57,12 @@ module.exports = {
     // Generate a unique 12 character ID for the quote
     const quoteId = uuidv4().slice(0, 12);
 
-    // Log the category, userId, and quoteId to the user schema
-    const userUpdate = new userSchema({
-      userID: userId,
-      quoteID: quoteId, // Log the unique quote ID
-      quoteName: "None yet", // Set quoteName to "None yet" as per instruction
-      category: category,
-      createdAt: new Date(), // Log the time and date when the category was added
-    });
-    await userUpdate.save();
-
-    // Log the quote and userId to the approveDeny schema
+    // Log the quote, userId, quoteId, and category to the approveDeny schema
     const quoteEntry = new approveDenySchema({
+      userId: userId,
       quoteId: quoteId,
       quoteName: quote,
-      userId: userId, // Log the userId of who made quoteName to the approveDeny schema
+      category: category,
     });
     await quoteEntry.save();
 

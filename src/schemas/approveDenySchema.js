@@ -10,6 +10,9 @@ const approveDenySchema = new mongoose.Schema({
   quoteName: {
     type: String,
   },
+  category: {
+    type: String,
+  },
   approve: {
     type: String,
   },
