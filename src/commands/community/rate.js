@@ -63,7 +63,7 @@ module.exports = {
     await userSchema.updateOne({ quoteID: quoteId }, { $inc: { rating: 1 } });
 
     // Log the rating in the specified channel using an embed
-    const logChannel = await client.channels.fetch("1290033222700240987");
+    const logChannel = await client.channels.fetch("1290153108818886688");
     if (logChannel) {
       const logEmbed = new EmbedBuilder()
         .setColor("#0099ff")
