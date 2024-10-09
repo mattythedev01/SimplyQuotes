@@ -22,7 +22,7 @@ module.exports = {
     const statsEmbed = new EmbedBuilder()
       .setColor("#4A5EAD")
       .setTitle("🤖 Bot Statistics 📊")
-      .setDescription("Here's a quick glance at some cool stats about me!")
+      .setDescription("Here's a quick glance at some cool stats")
       .addFields(
         { name: "🏠 Guilds", value: `${totalGuilds}`, inline: true },
         { name: "👥 Members", value: `${totalMembers}`, inline: true },
