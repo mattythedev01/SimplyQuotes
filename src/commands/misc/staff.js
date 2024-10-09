@@ -5,6 +5,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,6 +16,7 @@ module.exports = {
   botPermissions: [],
 
   run: async (client, interaction) => {
+    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
     const staffEmbed = new EmbedBuilder()
       .setColor("#5865F2") // Changed to a more vibrant Discord blue
       .setTitle("🌟 Become a Quote Reviewer!")
@@ -22,7 +24,7 @@ module.exports = {
         "Are you willing to help out? Join the support server and apply to be a quote reviewer!"
       )
       .setFooter({
-        text: "Total Quote Reviewers: 1",
+        text: `Tip: ${randomTip}`,
       })
       .setTimestamp();
 

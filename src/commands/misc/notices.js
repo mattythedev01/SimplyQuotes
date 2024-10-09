@@ -6,6 +6,7 @@ const {
   ButtonStyle,
 } = require("discord.js");
 const notices = require("../../notices.json");
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,6 +23,8 @@ module.exports = {
       inline: false,
     }));
 
+    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+
     const noticeEmbed = new EmbedBuilder()
       .setColor("#FFA500")
       .setTitle("📢 Current Notices")
@@ -30,7 +33,7 @@ module.exports = {
       )
       .addFields(noticeFields)
       .setFooter({
-        text: `Last updated`,
+        text: `Tip: ${randomTip}`,
         iconURL: client.user.displayAvatarURL(),
       })
       .setTimestamp();

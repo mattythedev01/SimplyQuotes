@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const tips = require("../../tip.json"); // Assuming tip.json is in the same directory
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,6 +16,9 @@ module.exports = {
 
   run: async (client, interaction) => {
     try {
+      // Select a random tip from the tips array
+      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
       const considerationEmbed = new EmbedBuilder()
         .setColor("#4A5EAD") // A more soothing blue color
         .setTitle("🌱 Early Stage Consideration 🌱")
@@ -22,7 +26,7 @@ module.exports = {
           "This bot is in its early stages, and not many users have added quotes to the database yet. Feel free to contribute and help our collection grow!"
         )
         .setFooter({
-          text: `Thank you - SimplyQuote`,
+          text: `Tip: ${randomTip} - SimplyQuote`,
         })
         .setTimestamp();
 

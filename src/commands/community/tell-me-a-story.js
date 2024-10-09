@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const tips = require("../../tip.json"); // Import the tips.json file
 
 const stories = [
   "Once upon a time in a land far, far away, there lived a wise old owl who knew the secrets of the forest. Every creature in the forest sought his wisdom to solve their problems.",
@@ -16,7 +17,7 @@ const stories = [
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("tellmeastory")
-    .setDescription("Tells a randomly selected full story based on a qoute.")
+    .setDescription("Tells a randomly selected full story based on a quote.")
     .toJSON(),
   testMode: false,
   devOnly: false,
@@ -27,13 +28,14 @@ module.exports = {
   run: async (client, interaction) => {
     try {
       const story = stories[Math.floor(Math.random() * stories.length)];
+      const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
 
       const storyEmbed = new EmbedBuilder()
         .setColor("#0099ff") // Blue color
-        .setTitle("A Randomly Selected Story Based on a Qoute.")
+        .setTitle("A Randomly Selected Story Based on a Quote.")
         .setDescription(story)
         .setFooter({
-          text: `This story was generated based on a community qoute.`,
+          text: `Tip: ${randomTip}`, // Use the random tip in the footer
         })
         .setTimestamp();
 

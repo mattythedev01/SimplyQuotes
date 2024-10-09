@@ -6,6 +6,7 @@ const {
 const approveDenySchema = require("../../schemas/approveDenySchema");
 const quoteSetupSchema = require("../../schemas/quoteSetupsSchema");
 const mConfig = require("../../messageConfig.json");
+const tips = require("../../tip.json"); // Import tips from tip.json
 const { v4: uuidv4 } = require("uuid"); // Import UUID to generate quoteId
 
 module.exports = {
@@ -39,9 +40,12 @@ module.exports = {
     const quote = options.getString("quote");
     const userId = interaction.user.id;
 
+    // Select a random tip from the tips array
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
     const rEmbed = new EmbedBuilder().setFooter({
       iconURL: `${client.user.displayAvatarURL({ dynamic: true })}`,
-      text: `${client.user.username} - SimplyQuote`,
+      text: `${client.user.username} - SimplyQuote | Tip: ${randomTip}`,
     });
 
     // Check if the guild has a quote setup

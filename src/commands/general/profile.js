@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const userSchema = require("../../schemas/userSchema"); // Assuming the schema is in the schemas folder
+const tips = require("../../tip.json"); // Import the tips.json file
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -37,6 +38,8 @@ module.exports = {
             : "No ratings found";
       }
 
+      const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+
       const profileEmbed = new EmbedBuilder()
         .setColor("#0099E1") // Enhanced visual appeal with a vibrant blue
         .setTitle(`🌟 ${user.username}'s Profile 🌟`)
@@ -57,7 +60,7 @@ module.exports = {
           }
         )
         .setFooter({
-          text: `Profile last updated`,
+          text: `Tip: ${randomTip}`, // Use the random tip in the footer
           iconURL: client.user.displayAvatarURL(),
         })
         .setTimestamp();

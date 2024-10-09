@@ -6,6 +6,7 @@ const {
   ButtonStyle,
 } = require("discord.js");
 const User = require("../../schemas/userSchema");
+const tips = require("../../tip.json"); // Import tips from tip.json
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -23,6 +24,9 @@ module.exports = {
       const quotes = await User.find().sort({ createdAt: -1 });
       const totalQuotes = quotes.length;
       let page = 0;
+
+      // Select a random tip from the tips array
+      const randomTip = tips[Math.floor(Math.random() * tips.length)];
 
       const generateEmbed = async (start) => {
         const current = quotes.slice(start, start + 10);
@@ -43,7 +47,9 @@ module.exports = {
             } of ${totalQuotes}`
           )
           .setDescription(descriptions.join("\n"))
-          .setFooter({ text: "Use the buttons to navigate between pages." })
+          .setFooter({
+            text: `Use the buttons to navigate between pages. Tip: ${randomTip}`,
+          })
           .setTimestamp();
       };
 

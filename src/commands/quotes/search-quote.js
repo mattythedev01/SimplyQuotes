@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../../schemas/userSchema");
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,6 +18,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     const quoteName = interaction.options.getString("name");
+    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
 
     const quote = await User.findOne(
       { "quotes.quoteName": quoteName },
@@ -34,7 +36,8 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setTitle(`Quote: "${foundQuote.quoteName}"`)
       .setColor("Blue")
-      .addFields({ name: "Quote", value: foundQuote.quoteText, inline: false });
+      .addFields({ name: "Quote", value: foundQuote.quoteText, inline: false })
+      .setFooter({ text: `Tip: ${randomTip}` });
 
     interaction.reply({ embeds: [embed], ephemeral: true });
   },

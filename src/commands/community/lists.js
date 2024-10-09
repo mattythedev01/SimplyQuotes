@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../../schemas/userSchema");
+const tips = require("../../tip.json"); // Import the tips.json file
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -39,12 +40,14 @@ module.exports = {
         (description) => description !== null
       );
 
+      const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Pick a random tip from the tips array
+
       const recentEmbed = new EmbedBuilder()
         .setColor("#0099ff") // Blue color
         .setTitle("Top 10 Most Recent Quotes")
         .setDescription(recentFiltered.join("\n"))
         .setFooter({
-          text: `Wanna rate a quote? Use /rate <quoteID> <rating>!`,
+          text: randomTip, // Use the random tip as the footer text
         })
         .setTimestamp();
 

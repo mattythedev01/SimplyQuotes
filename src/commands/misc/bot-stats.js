@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const userSchema = require("../../schemas/userSchema"); // Assuming the path to userSchema
 const defaultQuotes = require("../../defaultQuotes.json"); // Path to defaultQuotes.json
+const tips = require("../../tip.json"); // Import the tips.json file
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,6 +19,7 @@ module.exports = {
     );
     const totalQuotes = await userSchema.countDocuments(); // Assuming quotes are counted in userSchema
     const totalDefaultQuotes = defaultQuotes.length; // Get the total number of default quotes
+    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
 
     const statsEmbed = new EmbedBuilder()
       .setColor("#4A5EAD")
@@ -34,7 +36,7 @@ module.exports = {
         }
       )
       .setFooter({
-        text: `📅 Statistics as of now`,
+        text: `Tip: ${randomTip}`, // Use the random tip in the footer
         iconURL: client.user.displayAvatarURL(),
       })
       .setTimestamp();

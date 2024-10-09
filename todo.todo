@@ -24,13 +24,13 @@
         - QOTD - Make the bot send a random QOTD (Quote Of The Day) if QOTD is toggled on
    
    -- .JSON Changes
-        - Add tip.json - Tip.json will contain bot tips that are useful and it'll display a random tip on each/most embeds the bot has
+        - None
 
    -- Command Changes
-        - Update the approval command, to also list the category of the quote that they are tryna put it in
-        -- When a quote gets added, make it notify the devs via log channel that there is a quote needing to be reviewed & approved
-    
-    -- Bug Fixes
         - None
+
+    -- Bug Fixes
+        - randomquote canvas fixes to make it look better
+        - On the embeds on commands it returns undefined for the tip. Fix it so it doesn't show that
     --/
 --/

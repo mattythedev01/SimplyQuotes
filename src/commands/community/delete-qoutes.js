@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../../schemas/userSchema");
+const tips = require("../../tip.json"); // Assuming tips are stored in tip.json in the data folder
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,6 +23,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     const quoteId = interaction.options.getString("quoteid");
+    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
 
     try {
       if (quoteId) {
@@ -63,7 +65,7 @@ module.exports = {
           .setTitle("Your Quotes")
           .addFields(quoteList)
           .setFooter({
-            text: "You can delete a quote using /deletequotes <quoteID>.",
+            text: randomTip, // Use the random tip in the footer
           })
           .setTimestamp();
 

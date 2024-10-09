@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Quote = require("../../schemas/userSchema"); // Assuming the schema is named quoteSchema and contains fields for categories and quote names
+const tips = require("../../tip.json"); // Import the tips.json file
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -28,13 +29,19 @@ module.exports = {
         return;
       }
 
+      // Select a random tip from the tips array
+      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
       // Create an embed message to display the results
       const embed = new EmbedBuilder()
         .setTitle("Top 3 Popular Quote Categories")
         .setColor("Blue")
         .setDescription(
           "Here are the most popular categories based on the number of quotes:"
-        );
+        )
+        .setFooter({
+          text: `Tip: ${randomTip}`,
+        });
 
       categoryData.forEach((category, index) => {
         embed.addFields({

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../../schemas/userSchema");
+const tips = require("../../tip.json"); // Import the tips.json file
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -45,10 +46,15 @@ module.exports = {
         })
       );
 
+      const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+
       const embed = new EmbedBuilder()
         .setColor("#0099ff")
         .setTitle("Quote Leaderboard")
         .setDescription(leaderboardWithNames.join("\n"))
+        .setFooter({
+          text: `Tip: ${randomTip}`, // Use the random tip in the footer
+        })
         .setTimestamp();
 
       await interaction.reply({

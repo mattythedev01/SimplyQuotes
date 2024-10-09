@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const tips = require("../../tip.json"); // Import the tips.json file
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,6 +14,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     try {
+      const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
       const infoEmbed = new EmbedBuilder()
         .setColor("#0099ff") // Blue color
         .setTitle("How to Use the Quote System")
@@ -20,7 +22,7 @@ module.exports = {
           "To add a quote to our database, use the command `/add-quote <category> <quote>`. Once added, your quote may be selected to be sent globally to all designated quote channels every 24 hours."
         )
         .setFooter({
-          text: `Requested by ${interaction.user.tag}`,
+          text: `Tip: ${randomTip}`, // Use the random tip in the footer
           iconURL: interaction.user.displayAvatarURL(),
         })
         .setTimestamp();

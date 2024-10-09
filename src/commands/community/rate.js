@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const ratingSchema = require("../../schemas/ratingSchema");
 const userSchema = require("../../schemas/userSchema");
 const mConfig = require("../../messageConfig.json");
+const tips = require("../../tip.json"); // Import the tips.json file
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -34,10 +35,11 @@ module.exports = {
     const quoteId = interaction.options.getString("quoteid");
     const rating = interaction.options.getInteger("rating");
     const userId = interaction.user.id;
+    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
 
     const rEmbed = new EmbedBuilder().setFooter({
       iconURL: `${client.user.displayAvatarURL({ dynamic: true })}`,
-      text: `${client.user.username} - SimplyQuote`,
+      text: `${client.user.username} - SimplyQuote | Tip: ${randomTip}`,
     });
 
     // Find the quote in the user schema

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -9,6 +10,7 @@ module.exports = {
   botPermissions: [],
 
   run: async (client, interaction) => {
+    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
     const privacyEmbed = new EmbedBuilder()
       .setColor("#4A5EAD")
       .setTitle("🔒 Privacy Policy")
@@ -42,7 +44,7 @@ module.exports = {
         }
       )
       .setFooter({
-        text: `📅 Updated as of now`,
+        text: `Tip: ${randomTip}`,
         iconURL: client.user.displayAvatarURL(),
       })
       .setTimestamp();

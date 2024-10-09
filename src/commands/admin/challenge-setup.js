@@ -6,6 +6,7 @@ const {
 } = require("discord.js");
 const quoteChallengeSchema = require("../../schemas/quoteChallengeSetup");
 const mConfig = require("../../messageConfig.json");
+const tips = require("../../tip.json"); // Assuming tip.json is located in the root directory
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -41,9 +42,12 @@ module.exports = {
     const isActive = options.getBoolean("active") || false;
     const guildOwnerID = interaction.guild.ownerId;
 
+    // Select a random tip from the tips array
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
     const rEmbed = new EmbedBuilder().setFooter({
       iconURL: `${client.user.displayAvatarURL({ dynamic: true })}`,
-      text: `${client.user.username} - SimplyQuote`,
+      text: `${client.user.username} - SimplyQuote | Tip: ${randomTip}`,
     });
 
     let data = await quoteChallengeSchema.findOne({ guildID: guildId });

@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const challengeQuoteSchema = require("../../schemas/challengeQuoteSchema");
 const challengeCategorySchema = require("../../schemas/challengeCategorySchema");
 const mConfig = require("../../messageConfig.json");
+const tips = require("../../tip.json"); // Assuming tips are stored in an array in tip.json
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -29,7 +30,9 @@ module.exports = {
         .setColor(mConfig.embedColorError)
         .setDescription("❌ No active challenges.")
         .setFooter({
-          text: `${client.user.username} - Challenge Quote Submission`,
+          text: `${client.user.username} - ${
+            tips[Math.floor(Math.random() * tips.length)]
+          }`,
           iconURL: client.user.displayAvatarURL({ dynamic: true }),
         });
       interaction.reply({ embeds: [rEmbed], ephemeral: true });
@@ -48,11 +51,12 @@ module.exports = {
     const rEmbed = new EmbedBuilder()
       .setColor(mConfig.embedColorSuccess)
       .setDescription(
-        `✅ Your quote for the "${activeCategory.categoryName}" challenge has been submitted successfully.
-        }`
+        `✅ Your quote for the "${activeCategory.categoryName}" challenge has been submitted successfully.`
       )
       .setFooter({
-        text: `${client.user.username} - Challenge Quote Submission`,
+        text: `${client.user.username} - ${
+          tips[Math.floor(Math.random() * tips.length)]
+        }`,
         iconURL: client.user.displayAvatarURL({ dynamic: true }),
       });
 
