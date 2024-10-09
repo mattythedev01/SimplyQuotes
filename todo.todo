@@ -32,6 +32,6 @@
         - Update the approval command, to also list the category of the quote that they are tryna put it in
     
     -- Bug Fixes
-        - None
+        - On random quote command, when it puts the qoute in the image and if the qoute is big, it cuts off half of the words. 
     --/
 --/
