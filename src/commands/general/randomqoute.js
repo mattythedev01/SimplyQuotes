@@ -39,12 +39,12 @@ module.exports = {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Set text properties for the quote
-      ctx.font = "bold 40px 'Brush Script MT'"; // Bold and cursive font for the quote
+      ctx.font = "bold 40px 'Arial'"; // Changed to Arial font for the quote
       ctx.fillStyle = "#FFFFFF"; // White text color
       ctx.textAlign = "center";
       ctx.fillText(`"${randomQuote.quoteName}"`, canvas.width / 2, 100);
       // Set text properties for the username
-      ctx.font = "italic 30px 'Brush Script MT'"; // Italic and cursive font for the username
+      ctx.font = "italic 30px 'Arial'"; // Changed to Arial font for the username
       ctx.fillText(`- ${user.username}`, canvas.width / 2, 150);
 
       const attachment = new AttachmentBuilder(canvas.toBuffer(), {
