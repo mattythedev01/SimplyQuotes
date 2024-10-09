@@ -3,6 +3,7 @@ const User = require("../../schemas/userSchema");
 const QuoteSetup = require("../../schemas/quoteSetupsSchema");
 const LastQuote = require("../../schemas/lastQoute");
 const { EmbedBuilder } = require("discord.js");
+const defaultQuotes = require("../../defaultQuotes.json");
 
 module.exports = async (client) => {
   console.log(
@@ -14,44 +15,36 @@ module.exports = async (client) => {
   let users = await User.find({});
   let totalQuotes = users.length; // Total number of quotes in the database
 
-  // Ensure there are always at least 50 quotes across categories
-  const defaultQuotes = [
-    {
-      quote:
-        "The only limit to our realization of tomorrow will be our doubts of today.",
-      category: "Motivational",
-      author: "Unknown",
-    },
-    {
-      quote: "It is never too late to be what you might have been.",
-      category: "Inspirational",
-      author: "Unknown",
-    },
-  ];
-
   // Define allQuotes based on the presence of user quotes
-  let allQuotes =
-    totalQuotes >= 50
-      ? users.map((user) => ({
-          quote: user.quoteName,
-          category: user.category,
-          author: user.userID,
-        }))
-      : defaultQuotes;
+  let allQuotes = users.map((user) => ({
+    quote: user.quoteName,
+    category: user.category,
+    author: user.userID,
+  }));
 
   // Function to send a quote
   async function sendQuote() {
     for (const setup of setups) {
       const channel = await client.channels.fetch(setup.channelID);
       if (channel) {
+        // Randomly select a quote from either user quotes or default quotes
+        const sourceArray =
+          Math.random() < 0.5 || allQuotes.length === 0
+            ? defaultQuotes
+            : allQuotes;
         const randomQuote =
-          allQuotes[Math.floor(Math.random() * allQuotes.length)];
+          sourceArray[Math.floor(Math.random() * sourceArray.length)];
+        const quoteAuthor =
+          sourceArray === defaultQuotes
+            ? "Unknown"
+            : (await User.findById(randomQuote.author)).username;
+
         const quoteEmbed = new EmbedBuilder()
           .setColor("#34eb4f")
           .setTitle(`A ${randomQuote.category} quote`)
           .setDescription(`> "${randomQuote.quote}"`)
           .setFooter({
-            text: `Quote by: ${randomQuote.author}`,
+            text: `Quote by: ${quoteAuthor}`,
             iconURL: client.user.displayAvatarURL(),
           })
           .setTimestamp();
