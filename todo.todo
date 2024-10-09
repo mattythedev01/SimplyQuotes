@@ -6,6 +6,8 @@
         - Quote Streak command - Shows the top 10 users with the highest qoute streak.
         - Report Qoute - Members report a qoute they think is inappropriate and it must be approved by a mod if its inappropirate or not.
         - Every Qoute - Lists every qoute in the db, uses buttons to change pages. 10-15 qoutes per page.
+
+    -- Dev Features
         - Blacklist user & Blacklist guild - Blacklists a user or guild with reason, and duration and makes it so they cannot use the bot at all.
         - Unblacklist user & Unblacklist guild - Unblacklists a user or guild and makes it so they can use the bot again.
 
