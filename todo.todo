@@ -12,6 +12,7 @@
         - Ban/Blacklist command <time if any> - Blacklists a member by using their user ID and when blacklisted, they cannot use the bot at all. (DEV CMD)
         - Unblacklist command - Unblacklists a member by using their user ID and when unblacklisted, they can use the bot again. (DEV CMD)
 
+        - Add a tip.json file with bot tips, and a random bot tip will be displayed on most of the embed footers
         - Update a few schemas to see when the last quote was sent to channel, than update the event. 
     --/
 --/
