@@ -27,6 +27,7 @@
 
    -- Command Changes
         - Update the approval command, to also list the category of the quote that they are tryna put it in
+        -- When a quote gets added, make it notify the devs via log channel that there is a quote needing to be reviewed & approved
     
     -- Bug Fixes
         - None
