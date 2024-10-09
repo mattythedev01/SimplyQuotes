@@ -4,6 +4,7 @@ const userSchema = new Schema({
   userID: String,
   quoteID: String, // Added quoteID as per instruction
   category: String,
+  isBlacklisted: Boolean,
   quoteName: String,
   numberOfQuotes: Number,
   createdAt: Date,
