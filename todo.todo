@@ -27,6 +27,9 @@
    
    -- .JSON Changes
         - Add tip.json - Tip.json will contain bot tips that are useful and it'll display a random tip on each/most embeds the bot has
+
+   -- Command Changes
+        - Update the approval command, to also list the category of the quote that they are tryna put it in
     
     -- Bug Fixes
         - None
