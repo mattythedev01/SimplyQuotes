@@ -16,7 +16,7 @@ Welcome to **SimplyQuotes**, a global community quoting bot for Discord. The bot
 - [Usage](#usage)
 - [Database](#database)
 - [Contributing](#contributing)
-- [License](#license)
+- [License](https://github.com/mattythedev01/SimplyQuotes/blob/main/LICENSE)
 - [Support](#support)
 
 ## Installation 🛠️
