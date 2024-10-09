@@ -82,7 +82,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support 💖
 
-If you encounter any issues or have any questions, feel free to open an issue in the repository. We appreciate your feedback! (Or [Join the Discord server](https://discord.gg/4zaaRkTPZE)
+If you encounter any issues or have any questions, feel free to open an issue in the repository. We appreciate your feedback! (Or [Join the Discord server](https://discord.gg/4zaaRkTPZE))
 
 ---
 
