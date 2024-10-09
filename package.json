@@ -2,7 +2,7 @@
   "name": "simplyquote",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "src/bot.js",
   "scripts": {
     "dev": "SET \"MODE=dev\" && nodemon .",
     "public": "SET \"MODE=public\" && nodemon ."
@@ -10,9 +10,11 @@
   "author": "Matty<3",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/rest": "^2.4.0",
     "canvas": "^2.11.2",
     "colors": "^1.4.0",
-    "discord.js": "^14.15.3",
+    "discord-api-types": "^0.37.101",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
     "mongoose": "^7.6.12",
     "nodemon": "^3.1.3",

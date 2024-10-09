@@ -1,0 +1,94 @@
+body {
+  background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0.75)
+    ),
+    url("../images/background.gif");
+  background-size: cover; /* Ensures the background fills the entire page */
+  background-repeat: no-repeat; /* No repeat to ensure a single image covers the whole background */
+  background-attachment: fixed; /* Makes the background fixed during scrolling */
+  font-family: "Roboto", sans-serif;
+  color: #fff;
+  overflow: hidden;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: rgba(
+    0,
+    0,
+    0,
+    0.3
+  ); /* Increased transparency for better blending */
+}
+
+.navbar .logo {
+  max-width: 100px; /* Increased logo size for better visibility */
+  height: auto;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin-right: 1.5rem; /* Increased spacing for better readability */
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold; /* Added bold font style for better visibility */
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+  color: #ddd; /* Lighter color on hover for better visibility */
+}
+
+main {
+  text-align: center;
+}
+
+h1 {
+  font-size: 4rem; /* Increased font size for better visibility */
+  margin-bottom: 2.5rem; /* Increased spacing for aesthetic improvement */
+  text-shadow: 3px 3px 6px #000; /* Enhanced text shadow for better readability */
+}
+
+button {
+  background-color: #4285f4;
+  color: #fff;
+  padding: 1.5rem 2.5rem; /* Increased padding for better clickability */
+  border: none;
+  border-radius: 8px; /* Increased border radius for a smoother look */
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4); /* Enhanced shadow for a deeper 3D effect */
+}
+
+button:hover {
+  background-color: #3366cc;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* Enhanced hover effect */
+}
+
+.hidden {
+  display: none;
+}
+
+.stat {
+  margin: 1.5rem; /* Increased margin for better layout */
+  text-align: center;
+}
+
+.stat h2 {
+  font-size: 1.5rem; /* Increased font size for better visibility */
+}
+
+.stat p {
+  font-size: 1.2rem; /* Increased font size for better readability */
+}

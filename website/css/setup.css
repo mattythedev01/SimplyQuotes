@@ -1,0 +1,64 @@
+body {
+  font-family: "Roboto", sans-serif;
+  color: #fff;
+  background-color: #24292e; /* Dark background */
+  background-image: linear-gradient(to bottom right, #24292e, #484f58);
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+main {
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #e2e2e2;
+  text-shadow: 1px 1px 2px #000;
+}
+
+p {
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.step {
+  margin-bottom: 4rem;
+  padding: 2rem;
+  background: rgba(36, 41, 46, 0.9);
+  border-left: 5px solid #4285f4;
+  border-radius: 5px;
+}
+
+.invite-button {
+  display: block;
+  margin: 1rem auto;
+  padding: 1rem 2rem;
+  background-color: #4285f4;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  text-transform: uppercase;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.invite-button:hover {
+  background-color: #3366cc;
+  transform: translateY(-2px);
+}

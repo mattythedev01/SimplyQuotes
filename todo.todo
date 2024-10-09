@@ -1,9 +1,15 @@
 -- SimplyQoutes
     : SimplyQoutes todo list
     -- New Features
-        - Qoute trival - Generates existing qoutes and the category wont be shown, and you have to guess what category the qoute belongs to.
+        - Qoute trivia - Generates existing qoutes and the category wont be shown, and you have to guess what category the qoute belongs to.
         - Popular category - Shows the top 3 categories with the most qoutes in the db.
+        - Quote Streak command - Shows the top 10 users with the highest qoute streak.
         - Finish QOTD system
         - Do some API stuff/integrations
+        - Report Qoute - Members report a qoute they think is inappropriate and it must be approved by a mod if its inappropirate or not.
+        - Every Qoute - Lists every qoute in the db, uses buttons to change pages. 10-15 qoutes per page.
+        - Language command & system - Changes the overall bot language to selected language, and translates the qoutes to the selected language.
+        - Ban/Blacklist command <time if any> - Blacklists a member by using their user ID and when blacklisted, they cannot use the bot at all. (DEV CMD)
+        - Unblacklist command - Unblacklists a member by using their user ID and when unblacklisted, they can use the bot again. (DEV CMD)
     --/
 --/
