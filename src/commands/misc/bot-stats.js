@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const userSchema = require("../../schemas/userSchema"); // Assuming the path to userSchema
+const defaultQuotes = require("../../defaultQuotes.json"); // Path to defaultQuotes.json
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,6 +17,7 @@ module.exports = {
       0
     );
     const totalQuotes = await userSchema.countDocuments(); // Assuming quotes are counted in userSchema
+    const totalDefaultQuotes = defaultQuotes.length; // Get the total number of default quotes
 
     const statsEmbed = new EmbedBuilder()
       .setColor("#4A5EAD")
@@ -25,7 +27,11 @@ module.exports = {
         { name: "🏠 Guilds", value: `${totalGuilds}`, inline: true },
         { name: "👥 Members", value: `${totalMembers}`, inline: true },
         { name: "💬 Community Quotes", value: `${totalQuotes}`, inline: true },
-        { name: "📜 Default Quotes", value: "50", inline: true }
+        {
+          name: "📜 Default Quotes",
+          value: `${totalDefaultQuotes}`,
+          inline: true,
+        }
       )
       .setFooter({
         text: `📅 Statistics as of now`,
