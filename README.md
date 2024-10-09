@@ -12,12 +12,9 @@ Welcome to **SimplyQuotes**, a global community quoting bot for Discord. The bot
 
 ## Table of Contents 📚
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Database](#database)
-- [Contributing](#contributing)
+- [Installation](https://github.com/mattythedev01/SimplyQuotes/blob/main/installation.md)
 - [License](https://github.com/mattythedev01/SimplyQuotes/blob/main/LICENSE)
-- [Support](#support)
+- [Support](https://discord.gg/4zaaRkTPZE)
 
 ## Installation 🛠️
 
