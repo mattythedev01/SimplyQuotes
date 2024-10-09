@@ -2,10 +2,7 @@
     : SimplyQoutes todo list
     -- New Features
         - Qoute trivia - Generates existing qoutes and the category wont be shown, and you have to guess what category the qoute belongs to.
-        - Popular category - Shows the top 3 categories with the most qoutes in the db.
         - Quote Streak command - Shows the top 10 users with the highest qoute streak.
-        - Report Qoute - Members report a qoute they think is inappropriate and it must be approved by a mod if its inappropirate or not.
-        - Every Qoute - Lists every qoute in the db, uses buttons to change pages. 10-15 qoutes per page.
 
     -- Dev Features
         - Blacklist user & Blacklist guild - Blacklists a user or guild with reason, and duration and makes it so they cannot use the bot at all.
@@ -32,6 +29,6 @@
         - Update the approval command, to also list the category of the quote that they are tryna put it in
     
     -- Bug Fixes
-        - On random quote command, when it puts the qoute in the image and if the qoute is big, it cuts off half of the words. 
+        - None
     --/
 --/

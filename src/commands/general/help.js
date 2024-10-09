@@ -32,6 +32,10 @@ module.exports = {
         .map((command) => `\`${command}\``)
         .join("\n");
 
+      // Load tips from tip.json
+      const tips = require("../../tip.json").tips;
+      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
       const helpEmbed = new EmbedBuilder()
         .setColor("#5865F2") // Discord Blurple
         .setTitle("🌟 Help: All Commands 🌟")
@@ -49,7 +53,7 @@ module.exports = {
           }
         )
         .setFooter({
-          text: `Help command is still a WIP, more features will be added soon to it.`,
+          text: randomTip,
         })
         .setTimestamp()
         .setThumbnail(client.user.displayAvatarURL());

@@ -1,4 +1,10 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  EmbedBuilder,
+  ButtonBuilder,
+  ActionRowBuilder,
+  ButtonStyle,
+} = require("discord.js");
 const notices = require("../../notices.json");
 
 module.exports = {
@@ -12,7 +18,7 @@ module.exports = {
   run: async (client, interaction) => {
     const noticeFields = Object.entries(notices).map(([key, value]) => ({
       name: `**${key.toUpperCase().replace(/_/g, " ")}**`,
-      value: `${value}`,
+      value: `> ${value}`,
       inline: false,
     }));
 
@@ -29,8 +35,20 @@ module.exports = {
       })
       .setTimestamp();
 
+    const buttons = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setLabel("Invite")
+        .setStyle(ButtonStyle.Link)
+        .setURL("https://top.gg/bot/1292737804530356224"),
+      new ButtonBuilder()
+        .setLabel("Support")
+        .setStyle(ButtonStyle.Link)
+        .setURL("https://discord.gg/4zaaRkTPZE")
+    );
+
     await interaction.reply({
       embeds: [noticeEmbed],
+      components: [buttons],
       ephemeral: false,
     });
   },

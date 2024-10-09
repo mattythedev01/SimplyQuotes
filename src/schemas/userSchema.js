@@ -8,6 +8,7 @@ const userSchema = new Schema({
   numberOfQuotes: Number,
   createdAt: Date,
   rating: Number,
+  streaks: Number, // Added streaks to track consecutive correct trivia or quote categorizations
 });
 
 module.exports = model("User", userSchema);

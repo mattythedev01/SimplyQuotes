@@ -56,16 +56,22 @@ module.exports = {
       return;
     }
 
-    // Always create a new entry for approved quotes and initialize the rating
-    await userSchema.create({
-      userID: quoteData.userId,
-      quoteID: quoteData.quoteId,
-      quoteName: quoteData.quoteName,
-      category: quoteData.category,
-      numberOfQuotes: 1, // Assuming starting count, adjust logic as needed for incrementing
-      createdAt: new Date(),
-      rating: 0, // Initialize rating to 0
-    });
+    // Update or create a new entry for approved quotes
+    const existingUser = await userSchema.findOne({ userID: quoteData.userId });
+    if (existingUser) {
+      existingUser.numberOfQuotes += 1; // Increment number of quotes
+      await existingUser.save();
+    } else {
+      await userSchema.create({
+        userID: quoteData.userId,
+        quoteID: quoteData.quoteId,
+        quoteName: quoteData.quoteName,
+        category: quoteData.category,
+        numberOfQuotes: 1,
+        createdAt: new Date(),
+        rating: 0, // Initialize rating to 0
+      });
+    }
 
     // Send a DM to the user who created the quote
     const user = await client.users.fetch(quoteData.userId);
