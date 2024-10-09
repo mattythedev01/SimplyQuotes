@@ -6,7 +6,6 @@ const quoteSetupSchema = new Schema({
   roleID: String,
   quoteChallengeChannelID: String, // Added new field as per instruction
   quoteOfTheDay: String, // Field to store the quote of the day
-  lastSentQuote: Date, // Field to store the time of the last sent quote
 });
 
 module.exports = model("QuoteSetup", quoteSetupSchema);
