@@ -4,16 +4,28 @@
         - Qoute trivia - Generates existing qoutes and the category wont be shown, and you have to guess what category the qoute belongs to.
         - Popular category - Shows the top 3 categories with the most qoutes in the db.
         - Quote Streak command - Shows the top 10 users with the highest qoute streak.
-        - Finish QOTD system
-        - Do some API stuff/integrations
         - Report Qoute - Members report a qoute they think is inappropriate and it must be approved by a mod if its inappropirate or not.
         - Every Qoute - Lists every qoute in the db, uses buttons to change pages. 10-15 qoutes per page.
-        - Language command & system - Changes the overall bot language to selected language, and translates the qoutes to the selected language.
-        - Ban/Blacklist command <time if any> - Blacklists a member by using their user ID and when blacklisted, they cannot use the bot at all. (DEV CMD)
-        - Unblacklist command - Unblacklists a member by using their user ID and when unblacklisted, they can use the bot again. (DEV CMD)
+        - Blacklist user & Blacklist guild - Blacklists a user or guild with reason, and duration and makes it so they cannot use the bot at all.
+        - Unblacklist user & Unblacklist guild - Unblacklists a user or guild and makes it so they can use the bot again.
 
+    -- Language Features
+        - Language Set - Sets a language for the bot to use for the current guild, and translates the qoutes to the selected language. (Either use google-translate package or a .json file for it)
+    
+    -- API Changes 
+        - Add a API (More information on why the bot needs an API will soon be added here later on)
+    
+    -- Database Changes
+        - Update the userSchema and quoteSetupSchema to include languages, lastSentQuote, blacklists, and tosAgreement, durationOfBlacklist, reasonOfBlackList
+    
+    -- Event Changes
         - Add Tos - Make a TOS Embed with a button saying "I agree", once you click I agree, the tos button wont ever happen again for you. If you never clicked I agree and try to use a bot command, it'll popup with the tos embed. (So dont make it a cmd)
+        - QOTD - Make the bot send a random QOTD (Quote Of The Day) if QOTD is toggled on
+   
+   -- .JSON Changes
         - Add tip.json - Tip.json will contain bot tips that are useful and it'll display a random tip on each/most embeds the bot has
-        - Update some schemas - Add lastSentQuote to a schema to see when the last sent quote was in a guild, and than update the event for when the bot sends a quote to each quote channel. So astead of default time always being 24 hours, it'll use the lastSentQuote to fetch when the last sent quote was so if the bot goes offline and back online, the timer wont restart for certain guild. 
+    
+    -- Bug Fixes
+        - None
     --/
 --/
