@@ -16,7 +16,6 @@ module.exports = async (client) => {
 
   // Ensure there are always at least 50 quotes across categories
   const defaultQuotes = [
-    // Quotes array shortened for brevity
     {
       quote:
         "The only limit to our realization of tomorrow will be our doubts of today.",
@@ -28,7 +27,6 @@ module.exports = async (client) => {
       category: "Inspirational",
       author: "Unknown",
     },
-    // Additional quotes omitted
   ];
 
   // Define allQuotes based on the presence of user quotes
@@ -75,8 +73,19 @@ module.exports = async (client) => {
     }
   }
 
-  // Initial quote send
-  sendQuote();
+  // Check and send initial quote if needed
+  const now = new Date();
+  for (const setup of setups) {
+    const lastQuoteRecord = await LastQuote.findOne({
+      guildID: setup.guildID,
+    });
+    if (
+      !lastQuoteRecord ||
+      (now - new Date(lastQuoteRecord.lastSentQuote)) / 3600000 >= 24
+    ) {
+      sendQuote();
+    }
+  }
 
   // Interval to check and send quotes
   setInterval(async () => {
@@ -88,17 +97,22 @@ module.exports = async (client) => {
       if (lastQuoteRecord) {
         const lastSent = new Date(lastQuoteRecord.lastSentQuote);
         const hoursDiff = (now - lastSent) / 3600000; // Convert milliseconds to hours
-        if (hoursDiff < 24) {
-          return; // Do not send a quote if the last one was sent less than 24 hours ago
+        if (hoursDiff >= 24) {
+          sendQuote();
+          await LastQuote.findOneAndUpdate(
+            { guildID: setup.guildID },
+            { lastSentQuote: new Date() },
+            { upsert: true }
+          );
         }
+      } else {
+        sendQuote();
+        await LastQuote.findOneAndUpdate(
+          { guildID: setup.guildID },
+          { lastSentQuote: new Date() },
+          { upsert: true }
+        );
       }
-      // Send a quote if no record exists or it's been more than 24 hours
-      sendQuote();
-      await LastQuote.findOneAndUpdate(
-        { guildID: setup.guildID },
-        { lastSentQuote: new Date() },
-        { upsert: true }
-      );
     }
-  }, 5000); // Check every hour
+  }, 5000); // Check every 24 hours
 };
