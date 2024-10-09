@@ -61,9 +61,7 @@ module.exports = {
           })
           .setThumbnail(client.user.displayAvatarURL())
           .setFooter({
-            text: `Page ${
-              page + 1
-            } of ${totalPages} | 💡 Pro Tip: ${randomTip}`,
+            text: `Page ${page + 1} of ${totalPages} | 💡${randomTip}`,
             iconURL: client.user.displayAvatarURL(),
           })
           .setTimestamp();
