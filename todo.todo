@@ -14,6 +14,6 @@
 
         - Add Tos - Make a TOS Embed with a button saying "I agree", once you click I agree, the tos button wont ever happen again for you. If you never clicked I agree and try to use a bot command, it'll popup with the tos embed. (So dont make it a cmd)
         - Add tip.json - Tip.json will contain bot tips that are useful and it'll display a random tip on each/most embeds the bot has
-        - Update a few schemas to see when the last quote was sent to channel, than update the event. 
+        - Update some schemas - Add lastSentQuote to a schema to see when the last sent quote was in a guild, and than update the event for when the bot sends a quote to each quote channel. So astead of default time always being 24 hours, it'll use the lastSentQuote to fetch when the last sent quote was so if the bot goes offline and back online, the timer wont restart for certain guild. 
     --/
 --/
