@@ -13,7 +13,7 @@
         - Unblacklist command - Unblacklists a member by using their user ID and when unblacklisted, they can use the bot again. (DEV CMD)
 
         - Add Tos - Make a TOS Embed with a button saying "I agree", once you click I agree, the tos button wont ever happen again for you. If you never clicked I agree and try to use a bot command, it'll popup with the tos embed. (So dont make it a cmd)
-        - Add a tip.json file with bot tips, and a random bot tip will be displayed on most of the embed footers
+        - Add tip.json - Tip.json will contain bot tips that are useful and it'll display a random tip on each/most embeds the bot has
         - Update a few schemas to see when the last quote was sent to channel, than update the event. 
     --/
 --/
