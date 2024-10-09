@@ -71,5 +71,13 @@ module.exports = {
       .setColor(mConfig.embedColorSuccess)
       .setDescription(`✅ Quote waiting for review & approval by devs`);
     interaction.reply({ embeds: [rEmbed], ephemeral: true });
+
+    // Notify the devs via the specified channel
+    const devChannel = await client.channels.fetch("1290033222700240987");
+    if (devChannel) {
+      devChannel.send({
+        content: `New quote submitted by <@${userId}> for review: "${quote}" (ID: ${quoteId})`,
+      });
+    }
   },
 };

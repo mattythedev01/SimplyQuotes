@@ -29,6 +29,10 @@ const approveDenySchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  duration: {
+    type: Number,
+    default: 129600, // Duration in seconds (36 hours)
+  },
 });
 
 module.exports = mongoose.model("ApproveDeny", approveDenySchema);

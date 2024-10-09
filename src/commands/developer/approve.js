@@ -40,17 +40,17 @@ module.exports = {
       return;
     }
 
-    // Check if the quote data is older than 24 hours
+    // Check if the quote data is older than the duration specified in the schema
     const currentTime = new Date();
     const quoteCreationTime = new Date(quoteData.createdAt);
     const timeDifference = currentTime - quoteCreationTime;
 
-    if (timeDifference > 86400000) {
-      // 86400000 milliseconds in 24 hours
+    if (timeDifference > quoteData.duration * 1000) {
+      // quoteData.duration is in seconds, convert to milliseconds for comparison
       await approveDenySchema.deleteOne({ quoteId: quoteId });
       await interaction.reply({
         content:
-          "This quote has been in the database for more than 24 hours and has been deleted.",
+          "This quote has been in the database for more than the specified duration and has been deleted.",
         ephemeral: true,
       });
       return;
