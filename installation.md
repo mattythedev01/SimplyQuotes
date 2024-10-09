@@ -20,3 +20,32 @@ Open your terminal and execute the following command to clone the repository:
 git clone https://github.com/mattythedev01/SimplyQuotes.git
 cd SimplyQuotes
 ```
+### 2. Install Dependencies
+
+Open the project directory in your terminal and execute the following command:
+
+```bash
+npm install
+```
+If that doesn't work than try:
+
+```bash
+npm install --force
+```
+
+### 3. Variables
+
+In the root directory, rename `example.env` to `.env` and fill out the following:
+
+```bash
+DISCORD_TOKEN="https://discord.com/developers/applications"
+MONGODB_URI="https://www.mongodb.com/" 
+```
+
+### 4. Run the bot 
+
+Open the terminal in the root directory and execute the following command:
+
+```bash
+node .
+```
