@@ -61,8 +61,8 @@ module.exports = {
 
     // Store quote in approveDenySchema
     const newQuote = new approveDenySchema({
-      userID: userID,
-      quoteID: quoteID,
+      userId: userID,
+      quoteId: quoteID,
       category: category,
       quoteName: quote,
       rating: 0,
