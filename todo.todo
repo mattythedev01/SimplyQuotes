@@ -3,6 +3,8 @@
     -- New Features
         - Qoute trivia - Generates existing qoutes and the category wont be shown, and you have to guess what category the qoute belongs to.
         - Quote Streak command - Shows the top 10 users with the highest qoute streak.
+        - Quote stats command - Shows the stats of a certain quote using the quoteID
+        - Quote quiz command - 5 users specified by the person who runs the command, if everyone wants to participate, they press button on the embed, and they have to make up 5 quotes. Than each user will have to guess who wrote which quote. And the winner, if they win 5 games, will win a badge
 
     -- Dev Features
         - Blacklist user & Blacklist guild - Blacklists a user or guild with reason, and duration and makes it so they cannot use the bot at all.
