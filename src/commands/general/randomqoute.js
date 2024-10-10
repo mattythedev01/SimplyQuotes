@@ -31,7 +31,7 @@ module.exports = {
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
       const user = await client.users.fetch(randomQuote.userID);
 
-      const canvas = createCanvas(800, 350); // Adjusted canvas height to better accommodate text
+      const canvas = createCanvas(800, 300); // Adjusted canvas height for a more compact frame
       const ctx = canvas.getContext("2d");
 
       // Simple background
@@ -47,7 +47,7 @@ module.exports = {
       // Wrap text if it's too long to fit on one line
       const text = `"${randomQuote.quoteName}"`;
       const maxWidth = 760; // Max width for text
-      const lineHeight = 40; // Line height for breaks
+      const lineHeight = 35; // Reduced line height for more compact text
       let yPosition = 100; // Start position for text
 
       // Function to handle multi-line text
@@ -73,8 +73,7 @@ module.exports = {
       wrapText(ctx, text, canvas.width / 2, yPosition, maxWidth, lineHeight);
 
       // Adjust username position based on quote length
-      const usernameYPosition =
-        text.length <= 7 ? yPosition + 50 : yPosition + 160;
+      const usernameYPosition = yPosition + 75; // Increased gap between quote and username
 
       // Set text properties for the username
       ctx.font = "italic 20px 'Arial'"; // Adjusted font size for username
