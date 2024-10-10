@@ -1,5 +1,5 @@
 # SimplyQuotes 🤖✨
-[![Discord Bots](https://top.gg/api/widget/upvotes/1292737804530356224.svg)
+![Discord Bots](https://top.gg/api/widget/upvotes/1292737804530356224.svg)(https://top.gg/bot/1292737804530356224)
 
 Welcome to **SimplyQuotes**, a global community quoting bot for Discord. The bot is designed to help you share, retrieve, and discover quotes seamlessly within your Discord servers! 🌟
 
