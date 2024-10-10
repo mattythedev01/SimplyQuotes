@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const Quote = require("../../schemas/userSchema"); // Assuming the schema is named quoteSchema and contains fields for categories and quote names
-const tips = require("../../tip.json"); // Import the tips.json file
+const Quote = require("../../schemas/qoutesSchema"); // Changed to quotesSchema
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()

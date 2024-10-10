@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const userSchema = require("../../schemas/userSchema"); // Assuming the schema is in the schemas folder
-const tips = require("../../tip.json"); // Import the tips.json file
+const userSchema = require("../../schemas/userSchema");
+const tips = require("../../tip.json");
+const badges = require("../../badges.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,11 +23,23 @@ module.exports = {
   run: async (client, interaction) => {
     try {
       const user = interaction.options.getUser("user") || interaction.user;
-      const userData = await userSchema.findOne({ userID: user.id });
+      let userData = await userSchema.findOne({ userID: user.id });
 
-      // Retrieve the last quote and its rating using the quoteID stored in the user's data
-      let lastQuote = "No quotes added";
-      let lastQuoteRating = "No ratings found";
+      if (!userData) {
+        userData = new userSchema({
+          userID: user.id,
+          numberOfQuotes: 0,
+          TotalRatings: 0,
+          streaks: 0,
+          AuthorizedStaff: false,
+          DmAuthorized: true,
+          Badges: [],
+        });
+        await userData.save();
+      }
+
+      let lastQuote = "No quotes added yet";
+      let lastQuoteRating = "N/A";
       if (userData && userData.quoteID) {
         const quoteData = await userSchema.findOne({
           quoteID: userData.quoteID,
@@ -34,33 +47,47 @@ module.exports = {
         lastQuote = quoteData ? quoteData.quoteName : "No quotes found";
         lastQuoteRating =
           quoteData && quoteData.rating
-            ? quoteData.rating.toString()
-            : "No ratings found";
+            ? `${quoteData.rating.toFixed(1)} / 5.0`
+            : "Not rated yet";
       }
 
-      const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
+      const badgeEmojis = userData.Badges.map((badgeName) => {
+        const badge = badges.badges.find((b) => b.name === badgeName);
+        return badge ? badge.emoji : "";
+      }).join(" ");
 
       const profileEmbed = new EmbedBuilder()
-        .setColor("#0099E1") // Enhanced visual appeal with a vibrant blue
-        .setTitle(`🌟 ${user.username}'s Profile 🌟`)
-        .setDescription(`**Welcome to ${user.username}'s Quote Universe!**`)
-        .setThumbnail(user.displayAvatarURL({ dynamic: true }))
+        .setColor("#4A5EAD")
+        .setTitle(`${user.username}'s Quote Profile`)
+        .setDescription(`*"Inspiring others, one quote at a time."*`)
+        .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
         .addFields(
-          { name: "🔹 Username", value: `> ${user.username}`, inline: true },
-          { name: "🔹 User ID", value: `> ${user.id}`, inline: true },
           {
-            name: "📜 Last Quote",
-            value: `> "${lastQuote}"`,
+            name: "📊 Quote Stats",
+            value:
+              `> 📜 **Quotes Submitted:** ${userData.numberOfQuotes}\n` +
+              `> ⭐ **Total Ratings:** ${userData.TotalRatings}\n` +
+              `> 🔥 **Current Streak:** ${userData.streaks} days`,
             inline: false,
           },
           {
-            name: "⭐ Last Quote Rating",
-            value: `> ${lastQuoteRating}`,
+            name: "🏆 Badges",
+            value:
+              badgeEmojis.length > 0
+                ? badgeEmojis
+                : "No badges earned yet. Keep quoting!",
+            inline: false,
+          },
+          {
+            name: "🌟 Latest Quote",
+            value: `> "${lastQuote}"\n` + `> **Rating:** ${lastQuoteRating}`,
             inline: false,
           }
         )
         .setFooter({
-          text: `Tip: ${randomTip}`, // Use the random tip in the footer
+          text: `Tip: ${randomTip}`,
           iconURL: client.user.displayAvatarURL(),
         })
         .setTimestamp();

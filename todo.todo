@@ -18,8 +18,6 @@
     
     -- Database Changes
         - Update the userSchema and quoteSetupSchema to include languages, blacklists, and tosAgreement, durationOfBlacklist, reasonOfBlackList
-        - Update the userSchema just to have "Badges, Streaks, Number of Quotes, Staff Authorized, Total Ratings, DmAuthorized"
-        - Make the quotes be its own schema instead of being in the userSchema, to avoid clutter and to make it more organized.
     
     -- Event Changes
         - Add Tos - Make a TOS Embed with a button saying "I agree", once you click I agree, the tos button wont ever happen again for you. If you never clicked I agree and try to use a bot command, it'll popup with the tos embed. (So dont make it a cmd)
@@ -30,7 +28,7 @@
         - None
 
    -- Command Changes
-        - Make it so if its the users first time adding a quote to the bot, the bot will prompt up with "Would you like to be dm'd for future quotes? When they get approved" and if not, than it'll put that user on a no dm lsit.
+        - None
 
     -- Bug Fixes
         - randomquote canvas fixes to make it look better

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const User = require("../../schemas/userSchema");
-const tips = require("../../tip.json"); // Assuming tips are stored in tip.json in the data folder
+const Quote = require("../../schemas/qoutesSchema");
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,30 +22,30 @@ module.exports = {
   botPermissions: [],
 
   run: async (client, interaction) => {
-    const quoteId = interaction.options.getString("quoteid");
-    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+    const quoteID = interaction.options.getString("quoteid");
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
 
     try {
-      if (quoteId) {
+      if (quoteID) {
         // Delete the specified quote
-        const result = await User.findOneAndDelete({
-          quoteID: quoteId,
+        const result = await Quote.findOneAndDelete({
+          quoteID: quoteID,
           userID: interaction.user.id,
         });
         if (result) {
           await interaction.reply({
-            content: `Quote with ID ${quoteId} has been deleted.`,
+            content: `Quote with ID ${quoteID} has been deleted.`,
             ephemeral: true,
           });
         } else {
           await interaction.reply({
-            content: `No quote found with ID ${quoteId} or you do not have permission to delete it.`,
+            content: `No quote found with ID ${quoteID} or you do not have permission to delete it.`,
             ephemeral: true,
           });
         }
       } else {
         // List all quotes by the user
-        const userQuotes = await User.find({ userID: interaction.user.id });
+        const userQuotes = await Quote.find({ userID: interaction.user.id });
         if (userQuotes.length === 0) {
           await interaction.reply({
             content: "You have no quotes in the database.",
@@ -65,7 +65,7 @@ module.exports = {
           .setTitle("Your Quotes")
           .addFields(quoteList)
           .setFooter({
-            text: randomTip, // Use the random tip in the footer
+            text: randomTip,
           })
           .setTimestamp();
 

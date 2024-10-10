@@ -4,10 +4,11 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 const approveDenySchema = require("../../schemas/approveDenySchema");
+const userSchema = require("../../schemas/userSchema");
 const quoteSetupSchema = require("../../schemas/quoteSetupsSchema");
 const mConfig = require("../../messageConfig.json");
-const tips = require("../../tip.json"); // Import tips from tip.json
-const { v4: uuidv4 } = require("uuid"); // Import UUID to generate quoteId
+const tips = require("../../tip.json");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -38,9 +39,8 @@ module.exports = {
     const { options, guildId } = interaction;
     const category = options.getString("category");
     const quote = options.getString("quote");
-    const userId = interaction.user.id;
+    const userID = interaction.user.id;
 
-    // Select a random tip from the tips array
     const randomTip = tips[Math.floor(Math.random() * tips.length)];
 
     const rEmbed = new EmbedBuilder().setFooter({
@@ -48,7 +48,6 @@ module.exports = {
       text: `${client.user.username} - SimplyQuote | Tip: ${randomTip}`,
     });
 
-    // Check if the guild has a quote setup
     const quoteSetup = await quoteSetupSchema.findOne({ guildID: guildId });
     if (!quoteSetup) {
       rEmbed
@@ -58,31 +57,95 @@ module.exports = {
       return;
     }
 
-    // Generate a unique 12 character ID for the quote
-    const quoteId = uuidv4().slice(0, 12);
+    const quoteID = uuidv4().slice(0, 12);
 
-    // Log the quote, userId, quoteId, and category to the approveDeny schema
-    const quoteEntry = new approveDenySchema({
-      userId: userId,
-      quoteId: quoteId,
-      quoteName: quote,
+    // Store quote in approveDenySchema
+    const newQuote = new approveDenySchema({
+      userID: userID,
+      quoteID: quoteID,
       category: category,
+      quoteName: quote,
       rating: 0,
-      AuthorizedStaff: false,
     });
-    await quoteEntry.save();
+    await newQuote.save();
+
+    // Update or create user in userSchema
+    let user = await userSchema.findOne({ userID: userID });
+    if (!user) {
+      user = new userSchema({
+        userID: userID,
+        numberOfQuotes: 1,
+        TotalRatings: 0,
+        streaks: 0,
+        AuthorizedStaff: false,
+        DmAuthorized: null,
+        Badges: ["None"],
+      });
+    } else {
+      user.numberOfQuotes += 1;
+    }
+    await user.save();
 
     rEmbed
       .setColor(mConfig.embedColorSuccess)
       .setDescription(`✅ Quote waiting for review & approval by devs`);
-    interaction.reply({ embeds: [rEmbed], ephemeral: true });
+    await interaction.reply({ embeds: [rEmbed], ephemeral: true });
 
-    // Notify the devs via the specified channel
     const devChannel = await client.channels.fetch("1290033222700240987");
     if (devChannel) {
       devChannel.send({
-        content: `New quote submitted by <@${userId}> for review: "${quote}" (ID: ${quoteId})`,
+        content: `New quote submitted by <@${userID}> for review: "${quote}" (ID: ${quoteID})`,
       });
+    }
+
+    // Ask user about DM notifications only if DmAuthorized is null
+    if (user.DmAuthorized === null) {
+      await interaction.followUp({
+        content:
+          "Would you like to be notified in the DMs by me if your quote has been approved? [Y/n]",
+        ephemeral: true,
+      });
+
+      const filter = (m) => m.author.id === userID;
+      try {
+        const collected = await interaction.channel.awaitMessages({
+          filter,
+          max: 1,
+          time: 30000,
+          errors: ["time"],
+        });
+
+        const response = collected.first().content.toLowerCase();
+        if (["y", "yes"].includes(response)) {
+          user.DmAuthorized = true;
+          await user.save();
+          await interaction.followUp({
+            content:
+              "Great! You'll receive DM notifications for approved quotes.",
+            ephemeral: true,
+          });
+        } else if (["n", "no"].includes(response)) {
+          user.DmAuthorized = false;
+          await user.save();
+          await interaction.followUp({
+            content:
+              "Understood. You won't receive DM notifications for approved quotes.",
+            ephemeral: true,
+          });
+        } else {
+          await interaction.followUp({
+            content:
+              "Invalid response. Your DM notification settings remain unchanged.",
+            ephemeral: true,
+          });
+        }
+      } catch (error) {
+        await interaction.followUp({
+          content:
+            "No response received. Your DM notification settings remain unchanged.",
+          ephemeral: true,
+        });
+      }
     }
   },
 };

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const approveDenySchema = require("../../schemas/approveDenySchema");
-const userSchema = require("../../schemas/userSchema");
+const quoteSchema = require("../../schemas/qoutesSchema");
 const config = require("../../config.json");
 
 module.exports = {
@@ -40,33 +40,21 @@ module.exports = {
       return;
     }
 
-    // Check if the quote data is older than the duration specified in the schema
-    const currentTime = new Date();
-    const quoteCreationTime = new Date(quoteData.createdAt);
-    const timeDifference = currentTime - quoteCreationTime;
+    // Mark the quote as approved in approveDenySchema
+    quoteData.approved = true;
+    quoteData.approvedAt = new Date();
+    await quoteData.save();
 
-    if (timeDifference > quoteData.duration * 1000) {
-      // quoteData.duration is in seconds, convert to milliseconds for comparison
-      await approveDenySchema.deleteOne({ quoteId: quoteId });
-      await interaction.reply({
-        content:
-          "This quote has been in the database for more than the specified duration and has been deleted.",
-        ephemeral: true,
-      });
-      return;
-    }
-
-    // Create a new entry in the userSchema for the approved quote
-    const newUserEntry = new userSchema({
+    // Create a new entry in the quoteSchema for the approved quote
+    const newQuoteEntry = new quoteSchema({
       userID: quoteData.userId,
       quoteID: quoteData.quoteId,
       category: quoteData.category,
       quoteName: quoteData.quoteName,
-      createdAt: new Date(),
-      AuthorizedStaff: false,
+      rating: 0,
     });
 
-    await newUserEntry.save();
+    await newQuoteEntry.save();
 
     // Send a DM to the user who created the quote
     const user = await client.users.fetch(quoteData.userId);
@@ -84,5 +72,10 @@ module.exports = {
       content: `Quote with ID: ${quoteId} has been approved and the user has been notified.`,
       ephemeral: true,
     });
+
+    // Schedule deletion of the approved quote from approveDenySchema after 5 hours
+    setTimeout(async () => {
+      await approveDenySchema.deleteOne({ quoteId: quoteId });
+    }, 5 * 60 * 60 * 1000); // 5 hours in milliseconds
   },
 };

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const User = require("../../schemas/userSchema");
-const tips = require("../../tip.json"); // Assuming tips are stored in an array in tip.json
+const Quote = require("../../schemas/qoutesSchema");
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -20,12 +20,12 @@ module.exports = {
   botPermissions: [],
 
   run: async (client, interaction) => {
-    const quoteId = interaction.options.getString("quoteid");
-    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip
+    const quoteID = interaction.options.getString("quoteid");
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
 
     try {
-      if (!quoteId) {
-        const userQuotes = await User.find({ userID: interaction.user.id });
+      if (!quoteID) {
+        const userQuotes = await Quote.find({ userID: interaction.user.id });
         if (userQuotes.length === 0) {
           await interaction.reply({
             content: "You have no quotes in the database.",
@@ -45,7 +45,7 @@ module.exports = {
           .setTitle("Your Quotes")
           .addFields(quoteList)
           .setFooter({
-            text: randomTip, // Use the random tip in the footer
+            text: randomTip,
           })
           .setTimestamp();
 
@@ -53,14 +53,14 @@ module.exports = {
         return;
       }
 
-      const quote = await User.findOne({
-        quoteID: quoteId,
+      const quote = await Quote.findOne({
+        quoteID: quoteID,
         userID: interaction.user.id,
       });
 
       if (!quote) {
         await interaction.reply({
-          content: `No quote found with ID ${quoteId} or you do not have permission to edit it.`,
+          content: `No quote found with ID ${quoteID} or you do not have permission to edit it.`,
           ephemeral: false,
         });
         return;

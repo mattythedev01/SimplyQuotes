@@ -1,8 +1,8 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const ratingSchema = require("../../schemas/ratingSchema");
-const userSchema = require("../../schemas/userSchema");
+const Quote = require("../../schemas/qoutesSchema");
 const mConfig = require("../../messageConfig.json");
-const tips = require("../../tip.json"); // Import the tips.json file
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -32,18 +32,18 @@ module.exports = {
   botPermissions: [],
 
   run: async (client, interaction) => {
-    const quoteId = interaction.options.getString("quoteid");
+    const quoteID = interaction.options.getString("quoteid");
     const rating = interaction.options.getInteger("rating");
-    const userId = interaction.user.id;
-    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+    const userID = interaction.user.id;
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
 
     const rEmbed = new EmbedBuilder().setFooter({
       iconURL: `${client.user.displayAvatarURL({ dynamic: true })}`,
       text: `${client.user.username} - SimplyQuote | Tip: ${randomTip}`,
     });
 
-    // Find the quote in the user schema
-    const quote = await userSchema.findOne({ quoteID: quoteId });
+    // Find the quote in the quotes schema
+    const quote = await Quote.findOne({ quoteID: quoteID });
     if (!quote) {
       rEmbed
         .setColor(mConfig.embedColorError)
@@ -54,15 +54,15 @@ module.exports = {
 
     // Create a new rating entry
     const newRating = new ratingSchema({
-      quoteID: quoteId,
-      userID: userId,
+      quoteID: quoteID,
+      userID: userID,
       rating: rating,
       ratedAt: new Date(),
     });
     await newRating.save();
 
-    // Update the rating in the user schema
-    await userSchema.updateOne({ quoteID: quoteId }, { $inc: { rating: 1 } });
+    // Update the rating in the quotes schema
+    await Quote.updateOne({ quoteID: quoteID }, { $inc: { rating: 1 } });
 
     // Log the rating in the specified channel using an embed
     const logChannel = await client.channels.fetch("1290153108818886688");
@@ -71,7 +71,7 @@ module.exports = {
         .setColor("#0099ff")
         .setTitle("Quote Rating Logged")
         .setDescription(
-          `Quote: "${quote.quoteName}"\nRated by: <@${userId}>\nRating: ${rating}/5`
+          `Quote: "${quote.quoteName}"\nRated by: <@${userID}>\nRating: ${rating}/5`
         )
         .setTimestamp();
       logChannel.send({ embeds: [logEmbed] });

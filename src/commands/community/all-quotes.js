@@ -5,8 +5,8 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
-const User = require("../../schemas/userSchema");
-const tips = require("../../tip.json"); // Import tips from tip.json
+const Quote = require("../../schemas/qoutesSchema"); // Changed to quotesSchema
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,18 +21,17 @@ module.exports = {
 
   run: async (client, interaction) => {
     try {
-      const quotes = await User.find().sort({ createdAt: -1 });
+      const quotes = await Quote.find().sort({ createdAt: -1 }); // Changed to Quote model
       const totalQuotes = quotes.length;
       let page = 0;
 
-      // Select a random tip from the tips array
       const randomTip = tips[Math.floor(Math.random() * tips.length)];
 
       const generateEmbed = async (start) => {
         const current = quotes.slice(start, start + 10);
         const descriptions = await Promise.all(
           current.map(async (quote, index) => {
-            const user = await client.users.fetch(quote.userID);
+            const user = await client.users.fetch(quote.userID); // Changed to userID
             return `${start + index + 1}. "${quote.quoteName}" - ${
               user.username
             }`;
