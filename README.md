@@ -1,24 +1,4 @@
 # SimplyQuotes 🤖✨
-<p align="center">
-    <a href="https://discord.gg/3TCZRYafhW">
-        <img src="https://img.shields.io/discord/1289393785306091561?color=5865F2&logo=discord&logoColor=white" alt="Discord server" /></a>
-    <a href="https://github.com/forscht/ddrive/actions/workflows/lint.yml">
-        <img src="https://github.com/forscht/ddrive/actions/workflows/lint.yml/badge.svg">
-    </a>
-    <a href="https://hub.docker.com/r/forscht/ddrive">
-        <img src="https://img.shields.io/docker/v/forscht/ddrive?logo=docker">
-    </a>
-    <a href="https://hub.docker.com/r/forscht/ddrive">
-        <img src="https://img.shields.io/docker/pulls/forscht/ddrive.svg?logo=docker">
-    </a>
-    <a href="https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml">
-        <img src="https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml/badge.svg">
-    </a>
-    <a href="https://github.com/forscht/ddrive/blob/v2/LICENSE">
-        <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
-    </a>
-
-</p>
 
 Welcome to **SimplyQuotes**, a global community quoting bot for Discord. The bot is designed to help you share, retrieve, and discover quotes seamlessly within your Discord servers! 🌟
 
