@@ -1,5 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const userSchema = require("../../schemas/userSchema");
+const quoteSchema = require("../../schemas/qoutesSchema");
+const ratingSchema = require("../../schemas/ratingSchema");
 const tips = require("../../tip.json");
 const badges = require("../../badges.json");
 
@@ -38,17 +40,23 @@ module.exports = {
         await userData.save();
       }
 
+      // Get total ratings for the user
+      const totalRatings = await ratingSchema.countDocuments({
+        userID: user.id,
+      });
+
       let lastQuote = "No quotes added yet";
       let lastQuoteRating = "N/A";
-      if (userData && userData.quoteID) {
-        const quoteData = await userSchema.findOne({
-          quoteID: userData.quoteID,
-        });
-        lastQuote = quoteData ? quoteData.quoteName : "No quotes found";
-        lastQuoteRating =
-          quoteData && quoteData.rating
-            ? `${quoteData.rating.toFixed(1)} / 5.0`
-            : "Not rated yet";
+      let lastQuoteDate = "";
+      const latestQuote = await quoteSchema
+        .findOne({ userID: user.id })
+        .sort({ createdAt: -1 });
+      if (latestQuote) {
+        lastQuote = latestQuote.quoteName;
+        lastQuoteRating = latestQuote.rating
+          ? `${latestQuote.rating.toFixed(1)} / 5.0`
+          : "Not rated yet";
+        lastQuoteDate = latestQuote.createdAt.toDateString();
       }
 
       const randomTip = tips[Math.floor(Math.random() * tips.length)];
@@ -68,7 +76,7 @@ module.exports = {
             name: "📊 Quote Stats",
             value:
               `> 📜 **Quotes Submitted:** ${userData.numberOfQuotes}\n` +
-              `> ⭐ **Total Ratings:** ${userData.TotalRatings}\n` +
+              `> ⭐ **Total Ratings:** ${totalRatings}\n` +
               `> 🔥 **Current Streak:** ${userData.streaks} days`,
             inline: false,
           },
@@ -82,7 +90,7 @@ module.exports = {
           },
           {
             name: "🌟 Latest Quote",
-            value: `> "${lastQuote}"\n` + `> **Rating:** ${lastQuoteRating}`,
+            value: `> "${lastQuote}"`,
             inline: false,
           }
         )

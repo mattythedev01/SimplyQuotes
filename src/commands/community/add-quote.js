@@ -6,8 +6,11 @@ const {
 const approveDenySchema = require("../../schemas/approveDenySchema");
 const userSchema = require("../../schemas/userSchema");
 const quoteSetupSchema = require("../../schemas/quoteSetupsSchema");
+const quoteSchema = require("../../schemas/qoutesSchema");
+const streaksSchema = require("../../schemas/streaksSchema");
 const mConfig = require("../../messageConfig.json");
 const tips = require("../../tip.json");
+const badges = require("../../badges.json");
 const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
@@ -59,16 +62,6 @@ module.exports = {
 
     const quoteID = uuidv4().slice(0, 12);
 
-    // Store quote in approveDenySchema
-    const newQuote = new approveDenySchema({
-      userId: userID,
-      quoteId: quoteID,
-      category: category,
-      quoteName: quote,
-      rating: 0,
-    });
-    await newQuote.save();
-
     // Update or create user in userSchema
     let user = await userSchema.findOne({ userID: userID });
     if (!user) {
@@ -76,7 +69,7 @@ module.exports = {
         userID: userID,
         numberOfQuotes: 1,
         TotalRatings: 0,
-        streaks: 0,
+        streaks: 1,
         AuthorizedStaff: false,
         DmAuthorized: null,
         Badges: ["None"],
@@ -84,18 +77,80 @@ module.exports = {
     } else {
       user.numberOfQuotes += 1;
     }
-    await user.save();
 
-    rEmbed
-      .setColor(mConfig.embedColorSuccess)
-      .setDescription(`✅ Quote waiting for review & approval by devs`);
-    await interaction.reply({ embeds: [rEmbed], ephemeral: true });
-
-    const devChannel = await client.channels.fetch("1290033222700240987");
-    if (devChannel) {
-      devChannel.send({
-        content: `New quote submitted by <@${userID}> for review: "${quote}" (ID: ${quoteID})`,
+    // Update or create streak in streaksSchema
+    let streak = await streaksSchema.findOne({ userID: userID });
+    const now = new Date();
+    if (!streak) {
+      streak = new streaksSchema({
+        userID: userID,
+        Streaks: 1,
+        StreakLast: now,
       });
+    } else {
+      const timeDiff = now - streak.StreakLast;
+      const hoursDiff = timeDiff / (1000 * 60 * 60);
+
+      if (hoursDiff > 24) {
+        streak.Streaks = 1;
+        streak.StreakLast = now;
+      } else {
+        streak.Streaks += 1;
+        streak.StreakLast = now;
+      }
+    }
+
+    user.streaks = streak.Streaks;
+
+    // Check if user has reached a streak of 10 and add the Ongoingstreak badge
+    if (user.streaks === 10 && !user.Badges.includes(badges.Ongoingstreak)) {
+      user.Badges.push(badges.Ongoingstreak);
+    }
+
+    await user.save();
+    await streak.save();
+
+    if (user.AuthorizedStaff) {
+      // If user is authorized staff, add quote directly to quoteSchema
+      const newQuote = new quoteSchema({
+        userID: userID,
+        quoteID: quoteID,
+        category: category,
+        quoteName: quote,
+        rating: 0,
+      });
+      await newQuote.save();
+
+      rEmbed
+        .setColor(mConfig.embedColorSuccess)
+        .setDescription(
+          `✅ Quote added successfully. Your streak is ${streak.Streaks}!`
+        );
+      await interaction.reply({ embeds: [rEmbed], ephemeral: true });
+    } else {
+      // If user is not authorized staff, store quote in approveDenySchema
+      const newQuote = new approveDenySchema({
+        userId: userID,
+        quoteId: quoteID,
+        category: category,
+        quoteName: quote,
+        rating: 0,
+      });
+      await newQuote.save();
+
+      rEmbed
+        .setColor(mConfig.embedColorSuccess)
+        .setDescription(
+          `✅ Quote waiting for review & approval by devs. Your streak is ${streak.Streaks}!`
+        );
+      await interaction.reply({ embeds: [rEmbed], ephemeral: true });
+
+      const devChannel = await client.channels.fetch("1290033222700240987");
+      if (devChannel) {
+        devChannel.send({
+          content: `New quote submitted by <@${userID}> for review: "${quote}" (ID: ${quoteID})`,
+        });
+      }
     }
 
     // Ask user about DM notifications only if DmAuthorized is null
