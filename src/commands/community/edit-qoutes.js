@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Quote = require("../../schemas/qoutesSchema");
+const approveDenySchema = require("../../schemas/approveDenySchema");
 const tips = require("../../tip.json");
 
 module.exports = {
@@ -79,12 +80,30 @@ module.exports = {
       });
 
       collector.on("collect", async (m) => {
-        quote.quoteName = m.content;
-        await quote.save();
+        const newQuoteName = m.content;
+
+        // Create a new entry in approveDenySchema for approval
+        const newApprovalEntry = new approveDenySchema({
+          userId: interaction.user.id,
+          quoteId: quote.quoteID,
+          category: quote.category,
+          quoteName: newQuoteName,
+          rating: quote.rating,
+        });
+        await newApprovalEntry.save();
+
         await interaction.followUp({
-          content: `Quote updated to: "${quote.quoteName}"`,
+          content: `Your edited quote: "${newQuoteName}" has been submitted for approval.`,
           ephemeral: false,
         });
+
+        // Notify devs about the edit for approval
+        const devChannel = await client.channels.fetch("1290033222700240987");
+        if (devChannel) {
+          devChannel.send({
+            content: `Quote edit submitted by <@${interaction.user.id}> for review:\nOriginal: "${quote.quoteName}"\nEdited: "${newQuoteName}"\n(ID: ${quote.quoteID})`,
+          });
+        }
       });
 
       collector.on("end", (collected) => {
