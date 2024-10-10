@@ -34,10 +34,18 @@ module.exports = async (client) => {
             : allQuotes;
         const randomQuote =
           sourceArray[Math.floor(Math.random() * sourceArray.length)];
-        const quoteAuthor =
-          sourceArray === defaultQuotes
-            ? "Unknown"
-            : (await User.findById(randomQuote.author)).username;
+        let quoteAuthor = "Unknown";
+
+        if (sourceArray !== defaultQuotes) {
+          try {
+            const user = await User.findOne({ userID: randomQuote.author });
+            if (user) {
+              quoteAuthor = user.username;
+            }
+          } catch (error) {
+            console.error("Error fetching user:", error);
+          }
+        }
 
         const quoteEmbed = new EmbedBuilder()
           .setColor("#34eb4f")
