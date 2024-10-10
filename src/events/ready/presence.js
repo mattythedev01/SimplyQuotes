@@ -1,12 +1,11 @@
 const { ActivityType } = require("discord.js");
-const User = require("../../schemas/userSchema"); // Import User schema to access the database
+const quoteSchema = require("../../schemas/qoutesSchema"); // Import quoteSchema to access the database
 
 module.exports = async (client) => {
   /**
    * @param {Client} client
    */
-  const users = await User.find({});
-  const totalQuotes = users.length; // Total number of quotes in the database
+  const totalQuotes = await quoteSchema.countDocuments(); // Get total number of quotes in the database
 
   const presence = {
     Activity: {

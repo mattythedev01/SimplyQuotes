@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const userSchema = require("../../schemas/userSchema"); // Assuming the path to userSchema
+const quoteSchema = require("../../schemas/qoutesSchema"); // Updated to use quoteSchema
 const defaultQuotes = require("../../defaultQuotes.json"); // Path to defaultQuotes.json
 const tips = require("../../tip.json"); // Import the tips.json file
 
@@ -17,7 +17,7 @@ module.exports = {
       (acc, guild) => acc + guild.memberCount,
       0
     );
-    const totalQuotes = await userSchema.countDocuments(); // Assuming quotes are counted in userSchema
+    const totalQuotes = await quoteSchema.countDocuments(); // Updated to use quoteSchema
     const totalDefaultQuotes = defaultQuotes.length; // Get the total number of default quotes
     const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
 
