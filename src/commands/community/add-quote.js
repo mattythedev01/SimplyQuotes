@@ -68,6 +68,7 @@ module.exports = {
       quoteName: quote,
       category: category,
       rating: 0,
+      AuthorizedStaff: false,
     });
     await quoteEntry.save();
 

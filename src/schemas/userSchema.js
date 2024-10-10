@@ -9,6 +9,7 @@ const userSchema = new Schema({
   createdAt: Date,
   rating: Number,
   streaks: Number, // Added streaks to track consecutive correct trivia or quote categorizations
+  AuthorizedStaff: Boolean, // Added AuthorizedStaff field
 });
 
 module.exports = model("User", userSchema);

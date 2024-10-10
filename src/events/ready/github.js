@@ -119,7 +119,7 @@ module.exports = async (client) => {
   }
 
   // Check for events every minute
-  setInterval(checkGithubEvents, 5000);
+  setInterval(checkGithubEvents, 5 * 60 * 60 * 1000);
 
   console.log("[INFO]".blue + " GitHub event listener started.");
 };
