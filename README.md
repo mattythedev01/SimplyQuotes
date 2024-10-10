@@ -1,9 +1,24 @@
 # SimplyQuotes 🤖✨
- [![Discord](https://img.shields.io/discord/1289393785306091561.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/8g6zUQu)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=Spiderjockey02_Discord-Bot&metric=ncloc)](https://sonarcloud.io/dashboard?id=Spiderjockey02_Discord-Bot)
-[![CodeFactor](https://www.codefactor.io/repository/github/spiderjockey02/discord-bot/badge/master)](https://www.codefactor.io/repository/github/spiderjockey02/discord-bot/overview/master)
-![Website](https://img.shields.io/website?down_color=red&down_message=offline&up_color=green&up_message=online&url=https%3A%2F%2Fegglord.dev%2F)
-[![Crowdin](https://badges.crowdin.net/egglord-discord-bot/localized.svg)](https://crowdin.com/project/egglord-discord-bot)
+<p align="center">
+    <a href="https://discord.gg/3TCZRYafhW">
+        <img src="https://img.shields.io/discord/1289393785306091561?color=5865F2&logo=discord&logoColor=white" alt="Discord server" /></a>
+    <a href="https://github.com/forscht/ddrive/actions/workflows/lint.yml">
+        <img src="https://github.com/forscht/ddrive/actions/workflows/lint.yml/badge.svg">
+    </a>
+    <a href="https://hub.docker.com/r/forscht/ddrive">
+        <img src="https://img.shields.io/docker/v/forscht/ddrive?logo=docker">
+    </a>
+    <a href="https://hub.docker.com/r/forscht/ddrive">
+        <img src="https://img.shields.io/docker/pulls/forscht/ddrive.svg?logo=docker">
+    </a>
+    <a href="https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml">
+        <img src="https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml/badge.svg">
+    </a>
+    <a href="https://github.com/forscht/ddrive/blob/v2/LICENSE">
+        <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
+    </a>
+
+</p>
 
 Welcome to **SimplyQuotes**, a global community quoting bot for Discord. The bot is designed to help you share, retrieve, and discover quotes seamlessly within your Discord servers! 🌟
 
