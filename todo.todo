@@ -28,7 +28,7 @@
         - None
 
    -- Command Changes
-        - None
+        - Add-Quote command - Make it so if a user is staff, there quote doesn't need to go through the approval process.
 
     -- Bug Fixes
         - randomquote canvas fixes to make it look better
