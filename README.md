@@ -1,6 +1,6 @@
 # SimplyQuotes 🤖✨
-[![](https://img.shields.io/discord/565048515357835264.svg?logo=discord&colorB=7289DA&label=Atlanta%20Support)](https://discord.gg/4zaaRkTPZE)
-[![](https://img.shields.io/discord/568120814776614924.svg?logo=discord&colorB=00BFFF&label=Atlanta%20Emojis)](https://discord.gg/4zaaRkTPZE)
+[![](https://img.shields.io/discord/1289393785306091561.svg?logo=discord&colorB=7289DA&label=Atlanta%20Support)](https://discord.gg/4zaaRkTPZE)
+[![](https://img.shields.io/discord/1289393785306091561.svg?logo=discord&colorB=00BFFF&label=Atlanta%20Emojis)](https://discord.gg/4zaaRkTPZE)
 [![](https://img.shields.io/badge/discord.js-v13.0.0--dev-blue.svg?logo=npm)](https://github.com/discordjs)
 
 Welcome to **SimplyQuotes**, a global community quoting bot for Discord. The bot is designed to help you share, retrieve, and discover quotes seamlessly within your Discord servers! 🌟
