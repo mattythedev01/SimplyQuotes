@@ -25,7 +25,7 @@ module.exports = {
       const totalQuotes = quotes.length;
       let page = 0;
 
-      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+      const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
       const generateEmbed = async (start) => {
         const current = quotes.slice(start, start + 10);

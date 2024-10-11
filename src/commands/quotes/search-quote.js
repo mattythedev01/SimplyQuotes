@@ -18,7 +18,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     const quoteName = interaction.options.getString("name");
-    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+    const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
     const quote = await User.findOne(
       { "quotes.quoteName": quoteName },

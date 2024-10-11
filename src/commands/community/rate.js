@@ -35,7 +35,7 @@ module.exports = {
     const quoteID = interaction.options.getString("quoteid");
     const rating = interaction.options.getInteger("rating");
     const userID = interaction.user.id;
-    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
     const rEmbed = new EmbedBuilder().setFooter({
       iconURL: `${client.user.displayAvatarURL({ dynamic: true })}`,

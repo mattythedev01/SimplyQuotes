@@ -46,7 +46,7 @@ module.exports = {
         })
       );
 
-      const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+      const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
       const embed = new EmbedBuilder()
         .setColor("#0099ff")

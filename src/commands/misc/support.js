@@ -10,7 +10,7 @@ module.exports = {
   botPermissions: [],
 
   run: async (client, interaction) => {
-    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+    const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
     const supportEmbed = new EmbedBuilder()
       .setColor("#4A5EAD")
       .setTitle("Support Server")

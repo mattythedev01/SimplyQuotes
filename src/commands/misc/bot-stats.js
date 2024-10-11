@@ -19,7 +19,7 @@ module.exports = {
     );
     const totalQuotes = await quoteSchema.countDocuments(); // Updated to use quoteSchema
     const totalDefaultQuotes = defaultQuotes.length; // Get the total number of default quotes
-    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+    const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
     const statsEmbed = new EmbedBuilder()
       .setColor("#4A5EAD")

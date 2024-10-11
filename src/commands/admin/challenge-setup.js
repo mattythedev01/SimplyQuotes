@@ -43,7 +43,7 @@ module.exports = {
     const guildOwnerID = interaction.guild.ownerId;
 
     // Select a random tip from the tips array
-    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
     const rEmbed = new EmbedBuilder().setFooter({
       iconURL: `${client.user.displayAvatarURL({ dynamic: true })}`,

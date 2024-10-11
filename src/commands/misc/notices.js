@@ -23,7 +23,7 @@ module.exports = {
       inline: false,
     }));
 
-    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+    const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
     const noticeEmbed = new EmbedBuilder()
       .setColor("#FFA500")

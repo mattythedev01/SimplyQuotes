@@ -16,7 +16,7 @@ module.exports = {
   botPermissions: [],
 
   run: async (client, interaction) => {
-    const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+    const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
     const staffEmbed = new EmbedBuilder()
       .setColor("#5865F2") // Changed to a more vibrant Discord blue
       .setTitle("🌟 Become a Quote Reviewer!")

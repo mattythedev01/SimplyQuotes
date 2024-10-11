@@ -59,7 +59,7 @@ module.exports = {
         lastQuoteDate = latestQuote.createdAt.toDateString();
       }
 
-      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+      const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
       const badgeEmojis = userData.Badges.map((badgeName) => {
         const badge = badges.badges.find((b) => b.name === badgeName);
@@ -95,7 +95,7 @@ module.exports = {
           }
         )
         .setFooter({
-          text: `Tip: ${randomTip}`,
+          text: `${randomTip}`,
           iconURL: client.user.displayAvatarURL(),
         })
         .setTimestamp();

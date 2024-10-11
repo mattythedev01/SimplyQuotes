@@ -23,7 +23,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     const quoteID = interaction.options.getString("quoteid");
-    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
     try {
       if (quoteID) {

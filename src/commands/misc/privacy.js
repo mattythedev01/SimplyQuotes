@@ -16,7 +16,7 @@ module.exports = {
   botPermissions: [],
 
   run: async (client, interaction) => {
-    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
     const privacyEmbed = new EmbedBuilder()
       .setColor("#4A5EAD")

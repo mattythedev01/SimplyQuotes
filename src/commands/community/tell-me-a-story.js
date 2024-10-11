@@ -28,7 +28,7 @@ module.exports = {
   run: async (client, interaction) => {
     try {
       const story = stories[Math.floor(Math.random() * stories.length)];
-      const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+      const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
       const storyEmbed = new EmbedBuilder()
         .setColor("#0099ff") // Blue color

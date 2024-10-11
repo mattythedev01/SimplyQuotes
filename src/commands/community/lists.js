@@ -9,8 +9,18 @@ const Quote = require("../../schemas/qoutesSchema");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("listquotes")
-    .setDescription("Lists quotes with pagination.")
+    .setName("lists")
+    .setDescription("Lists quotes or authors with pagination.")
+    .addStringOption((option) =>
+      option
+        .setName("type")
+        .setDescription("Choose to list quotes or authors")
+        .setRequired(true)
+        .addChoices(
+          { name: "Quotes", value: "quotes" },
+          { name: "Authors", value: "authors" }
+        )
+    )
     .addIntegerOption((option) =>
       option
         .setName("page")
@@ -21,79 +31,28 @@ module.exports = {
 
   run: async (client, interaction) => {
     try {
+      const type = interaction.options.getString("type");
       const page = interaction.options.getInteger("page") || 1;
       const pageSize = 10;
       const skip = (page - 1) * pageSize;
 
-      const totalQuotes = await Quote.countDocuments();
-      const totalPages = Math.ceil(totalQuotes / pageSize);
-
-      if (totalQuotes === 0) {
-        return interaction.reply({
-          content: "No quotes found in the database.",
-          ephemeral: true,
-        });
+      if (type === "quotes") {
+        await module.exports.listQuotes(
+          client,
+          interaction,
+          page,
+          pageSize,
+          skip
+        );
+      } else {
+        await module.exports.listAuthors(
+          client,
+          interaction,
+          page,
+          pageSize,
+          skip
+        );
       }
-
-      const quotes = await Quote.find()
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(pageSize);
-
-      const quoteDescriptions = await Promise.all(
-        quotes.map(async (quote, index) => {
-          const user = await client.users.fetch(quote.userID);
-          return `${skip + index + 1}. "${quote.quoteName}" - ${
-            user.username
-          }\n> ||[Quote ID: ${quote.quoteID}]||`;
-        })
-      );
-
-      const embed = new EmbedBuilder()
-        .setColor("#0099ff")
-        .setTitle(`Quotes (Page ${page}/${totalPages})`)
-        .setDescription(quoteDescriptions.join("\n"))
-        .setTimestamp();
-
-      const buttons = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-          .setCustomId("previous")
-          .setLabel("Previous")
-          .setStyle(ButtonStyle.Primary)
-          .setDisabled(page === 1),
-        new ButtonBuilder()
-          .setCustomId("next")
-          .setLabel("Next")
-          .setStyle(ButtonStyle.Primary)
-          .setDisabled(page === totalPages)
-      );
-
-      const response = await interaction.reply({
-        embeds: [embed],
-        components: [buttons],
-        ephemeral: false,
-        fetchReply: true,
-      });
-
-      const collector = response.createMessageComponentCollector({
-        filter: (i) => i.user.id === interaction.user.id,
-        time: 60000,
-      });
-
-      collector.on("collect", async (i) => {
-        const newPage = i.customId === "next" ? page + 1 : page - 1;
-        await module.exports.run(client, {
-          ...interaction,
-          options: {
-            getInteger: () => newPage,
-          },
-        });
-        await i.update({ components: [] });
-      });
-
-      collector.on("end", () => {
-        interaction.editReply({ components: [] });
-      });
     } catch (err) {
       console.error("[ERROR] Error in the listquotes command:", err);
       await interaction.reply({
@@ -101,5 +60,124 @@ module.exports = {
         ephemeral: true,
       });
     }
+  },
+
+  listQuotes: async (client, interaction, page, pageSize, skip) => {
+    const totalQuotes = await Quote.countDocuments();
+    const totalPages = Math.ceil(totalQuotes / pageSize);
+
+    if (totalQuotes === 0) {
+      return interaction.reply({
+        content: "No quotes found in the database.",
+        ephemeral: true,
+      });
+    }
+
+    const quotes = await Quote.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize);
+
+    const quoteDescriptions = await Promise.all(
+      quotes.map(async (quote, index) => {
+        const user = await client.users.fetch(quote.userID);
+        return `${skip + index + 1}. "${quote.quoteName}" - ${
+          user.username
+        }\n> ||[Quote ID: ${quote.quoteID}]||`;
+      })
+    );
+
+    const embed = new EmbedBuilder()
+      .setColor("#0099ff")
+      .setTitle(`Quotes (Page ${page}/${totalPages})`)
+      .setDescription(quoteDescriptions.join("\n"))
+      .setTimestamp();
+
+    await module.exports.sendPaginatedEmbed(
+      interaction,
+      embed,
+      page,
+      totalPages,
+      "quotes"
+    );
+  },
+
+  listAuthors: async (client, interaction, page, pageSize, skip) => {
+    const uniqueAuthors = await Quote.distinct("userID");
+    const totalAuthors = uniqueAuthors.length;
+    const totalPages = Math.ceil(totalAuthors / pageSize);
+
+    if (totalAuthors === 0) {
+      return interaction.reply({
+        content: "No authors found in the database.",
+        ephemeral: true,
+      });
+    }
+
+    const authors = uniqueAuthors.slice(skip, skip + pageSize);
+
+    const authorDescriptions = await Promise.all(
+      authors.map(async (userID, index) => {
+        const user = await client.users.fetch(userID);
+        return `${skip + index + 1}. ${user.username}`;
+      })
+    );
+
+    const embed = new EmbedBuilder()
+      .setColor("#0099ff")
+      .setTitle(`Authors (Page ${page}/${totalPages})`)
+      .setDescription(authorDescriptions.join("\n"))
+      .setTimestamp();
+
+    await module.exports.sendPaginatedEmbed(
+      interaction,
+      embed,
+      page,
+      totalPages,
+      "authors"
+    );
+  },
+
+  sendPaginatedEmbed: async (interaction, embed, page, totalPages, type) => {
+    const buttons = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId("previous")
+        .setLabel("Previous")
+        .setStyle(ButtonStyle.Primary)
+        .setDisabled(page === 1),
+      new ButtonBuilder()
+        .setCustomId("next")
+        .setLabel("Next")
+        .setStyle(ButtonStyle.Primary)
+        .setDisabled(page === totalPages)
+    );
+
+    const response = await interaction.reply({
+      embeds: [embed],
+      components: [buttons],
+      ephemeral: false,
+      fetchReply: true,
+    });
+
+    const collector = response.createMessageComponentCollector({
+      filter: (i) => i.user.id === interaction.user.id,
+      time: 60000,
+    });
+
+    collector.on("collect", async (i) => {
+      const newPage = i.customId === "next" ? page + 1 : page - 1;
+      await module.exports.run(client, {
+        ...interaction,
+        options: {
+          getString: () => type,
+          getInteger: () => newPage,
+        },
+      });
+      await i.update({ components: [] });
+    });
+
+    collector.on("end", () => {
+      interaction.editReply({ components: [] });
+    });
   },
 };

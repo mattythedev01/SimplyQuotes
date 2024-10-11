@@ -17,7 +17,7 @@ module.exports = {
   run: async (client, interaction) => {
     try {
       // Select a random tip from the tips array
-      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+      const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
       const considerationEmbed = new EmbedBuilder()
         .setColor("#4A5EAD") // A more soothing blue color

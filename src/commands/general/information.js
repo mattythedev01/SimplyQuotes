@@ -14,7 +14,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     try {
-      const randomTip = tips[Math.floor(Math.random() * tips.length)]; // Select a random tip from the tips array
+      const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
       const infoEmbed = new EmbedBuilder()
         .setColor("#0099ff") // Blue color
         .setTitle("How to Use the Quote System")

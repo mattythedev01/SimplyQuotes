@@ -14,6 +14,8 @@ module.exports = {
   botPermissions: [],
 
   run: async (client, interaction) => {
-    await interaction.reply("Command coming soon!");
+    await interaction.reply(
+      `This command has changed to \`/lists <type> <page>\``
+    );
   },
 };

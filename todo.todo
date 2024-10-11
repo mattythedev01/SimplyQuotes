@@ -1,7 +1,6 @@
 -- SimplyQoutes
     : SimplyQoutes todo list
     -- New Features
-        - Qoute trivia - Generates existing qoutes and the category wont be shown, and you have to guess what category the qoute belongs to.
         - Quote quiz command - 5 users specified by the person who runs the command, if everyone wants to participate, they press button on the embed, and they have to make up 5 quotes. Than each user will have to guess who wrote which quote. And the winner, if they win 5 games, will win a badge
 
     -- Dev Features
@@ -25,8 +24,8 @@
         - None
 
    -- Command Changes
-        - Add-Quote command - Make it so if a user is staff, there quote doesn't need to go through the approval process.
-
+        - None
+        
     -- Bug Fixes
         - randomquote canvas fixes to make it look better
         - On the embeds on commands it returns undefined for the tip. Fix it so it doesn't show that

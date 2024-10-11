@@ -30,7 +30,7 @@ module.exports = {
       }
 
       // Select a random tip from the tips array
-      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+      const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
       // Create an embed message to display the results
       const embed = new EmbedBuilder()
