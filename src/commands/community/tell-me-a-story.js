@@ -1,23 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const tips = require("../../tip.json"); // Import the tips.json file
-
-const stories = [
-  "Once upon a time in a land far, far away, there lived a wise old owl who knew the secrets of the forest. Every creature in the forest sought his wisdom to solve their problems.",
-  "In the heart of the ancient forest, a hidden treasure lay buried. Many adventurers tried to find it, guided by maps and old tales, but only those pure of heart could see the path.",
-  "Under the vast, starlit sky, a young girl named Lila made a wish every night for a month, hoping for a friend. One night, a shooting star landed in her backyard, bringing with it a magical creature from another world.",
-  "Beside the whispering streams of the old valley, an old mill stood. The miller was known for telling stories that were said to be enchanted. People from villages nearby would visit to hear his tales and find solace.",
-  "In a small village on the edge of the kingdom, a festival was held every year that brought joy and laughter. But one year, the laughter was stolen by a mischievous spirit, and the villagers had to embark on a quest to bring joy back.",
-  "During the reign of the great lion king, peace had settled over the savannah. However, the lion king knew his time was coming to an end and sought an heir worthy of continuing his legacy of fairness and strength.",
-  "In a realm ruled by dragons, humans were considered mere myths until one brave soul ventured into the dragon's territory, sparking an unlikely friendship that changed the realm forever.",
-  "On a mysterious island that appeared once every hundred years, ancient ruins held clues to a lost civilization. Explorers raced against time to uncover its secrets before the island vanished again.",
-  "In the deepest dungeons of the haunted castle, a forgotten prince was imprisoned. His only hope was a band of unlikely heroes who, guided by a mysterious map, embarked on a perilous journey to rescue him.",
-  "Within the walls of the enchanted garden, every flower had a story. One particular rose, wilting and ignored, held the key to the garden's ancient magic, waiting for someone to discover its secret.",
-];
+const Quote = require("../../schemas/qoutesSchema");
+const tips = require("../../tip.json");
+const natural = require("natural");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("tellmeastory")
-    .setDescription("Tells a randomly selected full story based on a quote.")
+    .setDescription("Tells a story based on a random quote from the database.")
     .toJSON(),
   testMode: false,
   devOnly: false,
@@ -27,15 +16,32 @@ module.exports = {
 
   run: async (client, interaction) => {
     try {
-      const story = stories[Math.floor(Math.random() * stories.length)];
+      // Fetch a random quote from the database
+      const randomQuote = await Quote.aggregate([{ $sample: { size: 1 } }]);
+
+      if (!randomQuote || randomQuote.length === 0) {
+        await interaction.reply({
+          content: "No quotes found in the database.",
+          ephemeral: true,
+        });
+        return;
+      }
+
+      const quote = randomQuote[0];
+
+      // Generate a simple story based on the quote using natural language processing
+      const tokenizer = new natural.WordTokenizer();
+      const words = tokenizer.tokenize(quote.quoteName);
+
+      const story = generateSimpleStory(words);
       const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
       const storyEmbed = new EmbedBuilder()
-        .setColor("#0099ff") // Blue color
-        .setTitle("A Randomly Selected Story Based on a Quote.")
-        .setDescription(story)
+        .setColor("#0099ff")
+        .setTitle("A Story Inspired by a Quote")
+        .setDescription(`"${quote.quoteName}"\n\n${story}`)
         .setFooter({
-          text: `Tip: ${randomTip}`, // Use the random tip in the footer
+          text: `Tip: ${randomTip}`,
         })
         .setTimestamp();
 
@@ -49,9 +55,32 @@ module.exports = {
         err
       );
       await interaction.reply({
-        content: "An error occurred while executing the command.",
+        content: "An error occurred while generating the story.",
         ephemeral: true,
       });
     }
   },
 };
+
+function generateSimpleStory(words) {
+  const storyTemplates = [
+    "Once upon a time, there was a person who believed in {0}. They faced many challenges, but their faith in {1} kept them going. In the end, they learned that {2} was the key to happiness.",
+    "In a world where {0} seemed impossible, one individual dared to dream. Through perseverance and {1}, they showed everyone that {2} could become a reality.",
+    "The old wise man always said, '{0}'. Nobody understood until a young hero emerged, embodying {1}. Their journey proved that {2} was more than just words.",
+    "In a small town, the concept of {0} was foreign. But when a stranger arrived, preaching about {1}, everything changed. The town learned that {2} could transform lives.",
+    "A child once asked, 'What is {0}?' The answer came through years of experience, teaching them that {1} and {2} were interconnected in the grand tapestry of life.",
+  ];
+
+  const template =
+    storyTemplates[Math.floor(Math.random() * storyTemplates.length)];
+  const uniqueWords = [...new Set(words)].filter((word) => word.length > 3);
+
+  let story = template;
+  for (let i = 0; i < 3; i++) {
+    const word =
+      uniqueWords[i] || words[Math.floor(Math.random() * words.length)];
+    story = story.replace(`{${i}}`, word);
+  }
+
+  return story;
+}
