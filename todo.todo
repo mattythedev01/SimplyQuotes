@@ -16,6 +16,7 @@
     -- Database Changes
         - Update the userSchema and quoteSetupSchema to include languages, blacklists, and tosAgreement, durationOfBlacklist, reasonOfBlackList
         - Add more categories for the quotes to be in
+        - Add a TriviaStreak to the trivia schema & make it just like the other streaks (quoteStreak)
     
     -- Event Changes
         - Add Tos - Make a TOS Embed with a button saying "I agree", once you click I agree, the tos button wont ever happen again for you. If you never clicked I agree and try to use a bot command, it'll popup with the tos embed. (So dont make it a cmd)

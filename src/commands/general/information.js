@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const tips = require("../../tip.json"); // Import the tips.json file
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,14 +16,37 @@ module.exports = {
     try {
       const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
       const infoEmbed = new EmbedBuilder()
-        .setColor("#0099ff") // Blue color
-        .setTitle("How to Use the Quote System")
+        .setColor("#FF6B6B") // Vibrant coral color
+        .setTitle("📚 Quote System Guide")
         .setDescription(
-          "To add a quote to our database, use the command `/add-quote <category> <quote>`. Once added, your quote may be selected to be sent globally to all designated quote channels every 24 hours."
+          "Welcome to our amazing Quote System! Here's how you can contribute and enjoy the wisdom shared by our community."
         )
+        .addFields(
+          {
+            name: "📝 Adding a Quote",
+            value:
+              "Use `/add-quote <category> <quote>` to contribute your favorite quotes to our database.",
+          },
+          {
+            name: "🌟 Quote Selection",
+            value:
+              "Your quote might be chosen to inspire others! Selected quotes are shared globally in designated channels every 24 hours.",
+          },
+          {
+            name: "🔍 Categories",
+            value:
+              "Organize your quotes by category to make them easier to find and appreciate.",
+          },
+          {
+            name: "💡 Benefits",
+            value:
+              "Share wisdom, inspire others, and be part of a growing collection of thought-provoking quotes!",
+          }
+        )
+        .setThumbnail(interaction.guild.iconURL({ dynamic: true }))
         .setFooter({
-          text: `Tip: ${randomTip}`, // Use the random tip in the footer
-          iconURL: interaction.user.displayAvatarURL(),
+          text: `Pro Tip: ${randomTip}`,
+          iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
         })
         .setTimestamp();
 
@@ -34,7 +57,8 @@ module.exports = {
         err
       );
       await interaction.reply({
-        content: "An error occurred while executing the command.",
+        content:
+          "Oops! An error occurred while fetching the information. Please try again later or contact support if the issue persists.",
         ephemeral: true,
       });
     }

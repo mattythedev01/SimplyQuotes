@@ -1,18 +1,18 @@
 {
   "tips": [
-    "Tip: Explore new quotes daily with '/randomquote'.",
-    "Tip: Help us maintain a respectful community by reporting inappropriate quotes using '/reportquote'.",
-    "Tip: Customize your experience by setting your preferred language with '/setlanguage (SOON)'.",
-    "Tip: Challenge yourself and others with our Quote Trivia feature!",
-    "Tip: Find out which quote categories are trending with '/popularcategory'.",
-    "Tip: Keep your quote streak alive by interacting with the bot each day!",
-    "Tip: Confirm your agreement to our Terms of Service to enhance your user experience. (SOON)",
-    "Tip: Send a random database quote by using '/sendquote'.",
-    "Tip: Improve your ranking on the Quote Leaderboard by adding high-quality quotes!",
-    "Tip: Engage with the community by rating quotes with '/ratequote'.",
-    "Tip: View important messages by the developers with '/notices'.",
-    "Tip: Join our Discord server for quote discussions and bot support!",
-    "Tip: Earn badges by consistently adding high-quality quotes!",
-    "Tip: Use '/suggestfeature' to propose new ideas for the bot."
+    "Explore new quotes daily with '/randomquote'.",
+    "Help us maintain a respectful community by reporting inappropriate quotes using '/reportquote'.",
+    "Customize your experience by setting your preferred language with '/setlanguage (SOON)'.",
+    "Challenge yourself and others with our Quote Trivia feature!",
+    "Find out which quote categories are trending with '/popularcategory'.",
+    "Keep your quote streak alive by interacting with the bot each day!",
+    "Confirm your agreement to our Terms of Service to enhance your user experience. (SOON)",
+    "Send a random database quote by using '/sendquote'.",
+    "Improve your ranking on the Quote Leaderboard by adding high-quality quotes!",
+    "Engage with the community by rating quotes with '/ratequote'.",
+    "View important messages by the developers with '/notices'.",
+    "Join our Discord server for quote discussions and bot support!",
+    "Earn badges by consistently adding high-quality quotes!",
+    "Use '/suggestfeature' to propose new ideas for the bot."
   ]
 }
