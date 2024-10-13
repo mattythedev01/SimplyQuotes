@@ -72,6 +72,7 @@ module.exports = {
         streaks: 1,
         AuthorizedStaff: false,
         DmAuthorized: null,
+        Authorized: true,
         Badges: ["None"],
       });
     } else {
@@ -102,9 +103,21 @@ module.exports = {
 
     user.streaks = streak.Streaks;
 
-    // Check if user has reached a streak of 10 and add the Ongoingstreak badge
-    if (user.streaks === 10 && !user.Badges.includes(badges.Ongoingstreak)) {
-      user.Badges.push(badges.Ongoingstreak);
+    // Check if user has reached 10 TotalRatings within 90 hours and add the Ongoingstreak badge
+    const ninetyHoursAgo = new Date(now.getTime() - 90 * 60 * 60 * 1000);
+    const recentQuotes = await quoteSchema.find({
+      userID: userID,
+      createdAt: { $gte: ninetyHoursAgo },
+    });
+
+    const totalRecentRatings = recentQuotes.reduce(
+      (sum, quote) => sum + quote.rating,
+      0
+    );
+
+    if (totalRecentRatings >= 10 && !user.Badges.includes("Ongoingstreak")) {
+      user.Badges = user.Badges.filter((badge) => badge !== "None");
+      user.Badges.push("Ongoingstreak");
     }
 
     await user.save();

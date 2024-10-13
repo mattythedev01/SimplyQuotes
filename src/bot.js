@@ -16,7 +16,11 @@ const client = new Client({
 eventHandler(client);
 
 client.on("messageCreate", (message) => {
-  if (message.mentions.has(client.user) && !message.author.bot) {
+  if (
+    message.mentions.has(client.user) &&
+    !message.author.bot &&
+    !message.mentions.everyone
+  ) {
     const embed = new EmbedBuilder()
       .setColor("#4A5EAD") // A more soothing blue color
       .setTitle("🌟 Welcome to SimplyQuotes! 🌟")

@@ -1,15 +1,15 @@
 const { ActivityType } = require("discord.js");
-const quoteSchema = require("../../schemas/qoutesSchema"); // Import quoteSchema to access the database
+const defaultQuotes = require("../../defaultQuotes.json");
 
 module.exports = async (client) => {
   /**
    * @param {Client} client
    */
-  const totalQuotes = await quoteSchema.countDocuments(); // Get total number of quotes in the database
+  const totalDefaultQuotes = defaultQuotes.length;
 
   const presence = {
     Activity: {
-      Name: `${totalQuotes} quotes!`,
+      Name: `${totalDefaultQuotes} quotes!`,
       Type: ActivityType.Playing,
     },
     Status: "online",

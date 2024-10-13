@@ -7,7 +7,14 @@ const userSchema = new Schema({
   streaks: Number,
   AuthorizedStaff: Boolean,
   DmAuthorized: Boolean,
+  Authorized: Boolean,
   Badges: [String],
+  Progress: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100,
+  },
 });
 
 module.exports = model("User", userSchema);

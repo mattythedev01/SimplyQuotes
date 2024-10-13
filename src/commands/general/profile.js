@@ -8,7 +8,7 @@ const badges = require("../../badges.json");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("profile")
-    .setDescription("Display a user's profile.")
+    .setDescription("Display a user's quote profile with detailed statistics.")
     .addUserOption((option) =>
       option
         .setName("user")
@@ -36,27 +36,49 @@ module.exports = {
           AuthorizedStaff: false,
           DmAuthorized: true,
           Badges: [],
+          Progress: 0,
         });
         await userData.save();
       }
 
-      // Get total ratings for the user
-      const totalRatings = await ratingSchema.countDocuments({
-        userID: user.id,
-      });
+      // Get total ratings and average rating from userSchema
+      const totalRatings = userData.TotalRatings || 0;
+      const avgRating = userData.averageRating
+        ? userData.averageRating.toFixed(2)
+        : "N/A";
 
-      let lastQuote = "No quotes added yet";
-      let lastQuoteRating = "N/A";
-      let lastQuoteDate = "";
+      // Get latest quote
       const latestQuote = await quoteSchema
         .findOne({ userID: user.id })
         .sort({ createdAt: -1 });
+
+      // Get top-rated quote
+      const topRatedQuote = await quoteSchema
+        .findOne({ userID: user.id })
+        .sort({ rating: -1 });
+
+      // Get ratings for latest and top-rated quotes
+      let latestQuoteRating = "Not rated yet";
+      let topRatedQuoteRating = "Not rated yet";
+
       if (latestQuote) {
-        lastQuote = latestQuote.quoteName;
-        lastQuoteRating = latestQuote.rating
-          ? `${latestQuote.rating.toFixed(1)} / 5.0`
-          : "Not rated yet";
-        lastQuoteDate = latestQuote.createdAt.toDateString();
+        const latestRating = await ratingSchema.findOne({
+          quoteID: latestQuote.quoteID,
+          userID: user.id,
+        });
+        if (latestRating) {
+          latestQuoteRating = `${latestRating.rating.toFixed(1)} / 5.0`;
+        }
+      }
+
+      if (topRatedQuote) {
+        const topRating = await ratingSchema.findOne({
+          quoteID: topRatedQuote.quoteID,
+          userID: user.id,
+        });
+        if (topRating) {
+          topRatedQuoteRating = `${topRating.rating.toFixed(1)} / 5.0`;
+        }
       }
 
       const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
@@ -68,34 +90,54 @@ module.exports = {
 
       const profileEmbed = new EmbedBuilder()
         .setColor("#4A5EAD")
-        .setTitle(`${user.username}'s Quote Profile`)
-        .setDescription(`*"Inspiring others, one quote at a time."*`)
+        .setTitle(`📚 ${user.username}'s Quotation Odyssey 📚`)
+        .setDescription(
+          `*"Weaving wisdom through words, one quote at a time."*`
+        )
         .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
         .addFields(
           {
-            name: "📊 Quote Stats",
+            name: "📊 Quote Statistics",
             value:
-              `> 📜 **Quotes Submitted:** ${userData.numberOfQuotes}\n` +
-              `> ⭐ **Total Ratings:** ${totalRatings}\n` +
-              `> 🔥 **Current Streak:** ${userData.streaks} days`,
+              `> 📜 **Quotes Contributed:** ${userData.numberOfQuotes}\n` +
+              `> ⭐ **Total Ratings Received:** ${totalRatings}\n` +
+              `> 📈 **Average Rating:** ${avgRating} / 5.0\n` +
+              `> 🔥 **Current Streak:** ${userData.streaks} days\n` +
+              `> 🏅 **Ranking:** #${await getUserRanking(user.id)} overall`,
             inline: false,
           },
           {
-            name: "🏆 Badges",
+            name: "🏆 Achievements Unlocked",
             value:
               badgeEmojis.length > 0
-                ? badgeEmojis
-                : "No badges earned yet. Keep quoting!",
+                ? `> ${badgeEmojis}`
+                : "> No badges earned yet. Your journey awaits!",
             inline: false,
           },
           {
-            name: "🌟 Latest Quote",
-            value: `> "${lastQuote}"`,
+            name: "🌟 Latest Inspiration",
+            value: latestQuote
+              ? `> "*${
+                  latestQuote.quoteName
+                }*"\n> 📅 Shared on ${latestQuote.createdAt.toDateString()}\n> 🌠 Rating: ${latestQuoteRating}`
+              : "No quotes added yet. Start your quotation journey!",
+            inline: false,
+          },
+          {
+            name: "🏆 Most Acclaimed Quote",
+            value: topRatedQuote
+              ? `> "*${topRatedQuote.quoteName}*"\n> 🌠 Rating: ${topRatedQuoteRating}`
+              : "Add more quotes to see your top-rated inspiration!",
+            inline: false,
+          },
+          {
+            name: "📈 Progress",
+            value: generateProgressBar(userData.numberOfQuotes),
             inline: false,
           }
         )
         .setFooter({
-          text: `${randomTip}`,
+          text: `💡 Tip: ${randomTip}`,
           iconURL: client.user.displayAvatarURL(),
         })
         .setTimestamp();
@@ -104,9 +146,32 @@ module.exports = {
     } catch (err) {
       console.error("[ERROR] Error in the profile command run function:", err);
       await interaction.reply({
-        content: "An error occurred while executing the command.",
+        content:
+          "An error occurred while crafting your quotation profile. Please try again later.",
         ephemeral: true,
       });
     }
   },
 };
+
+async function getUserRanking(userId) {
+  const allUsers = await userSchema.find().sort({ numberOfQuotes: -1 });
+  const userIndex = allUsers.findIndex((user) => user.userID === userId);
+  return userIndex + 1;
+}
+
+function generateProgressBar(current) {
+  const level = Math.floor(current / 100);
+  const max = 100 + level * 400;
+  const currentInLevel = current % max;
+  const percentage = Math.min((currentInLevel / max) * 100, 100);
+  const filledWidth = Math.floor(currentInLevel / 10);
+  const emptyWidth = 10 - filledWidth;
+
+  const filledBar = "🟦".repeat(current);
+  const emptyBar = "🟥".repeat(Math.max(0, 10 - current));
+
+  return `${filledBar}${emptyBar} ${percentage.toFixed(1)}%\n*Level ${
+    level + 1
+  } - ${currentInLevel}/${max} quotes to next level*`;
+}
