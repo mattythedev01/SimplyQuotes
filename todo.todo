@@ -10,7 +10,7 @@
         - Language Set - Sets a language for the bot to use for the current guild, and translates the qoutes to the selected language. (Either use google-translate package or a .json file for it)
     
     -- API Changes 
-        - Add a API (More information on why the bot needs an API will soon be added here later on)
+        - Add a API (An API for choosing random quotes, and perhaps the trivia and quiz commands)
     
     -- Database Changes
         - Update the userSchema and quoteSetupSchema to include languages, blacklists, and tosAgreement, durationOfBlacklist, reasonOfBlackList

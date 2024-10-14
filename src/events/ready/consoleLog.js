@@ -14,28 +14,27 @@ module.exports = async (client) => {
 
   const setups = await QuoteSetup.find({});
   let users = await User.find({});
-  let totalQuotes = users.length; // Total number of quotes in the database
-
-  // Define allQuotes based on the presence of user quotes
-  let allQuotes = await Quote.find({});
+  let totalQuotes = await Quote.countDocuments({}); // Total number of quotes in the database
 
   // Function to send a quote
   async function sendQuote() {
     // Randomly select a quote from either user quotes or default quotes
-    const sourceArray =
-      Math.random() < 0.5 || allQuotes.length === 0 ? defaultQuotes : allQuotes;
-    const randomQuote =
-      sourceArray[Math.floor(Math.random() * sourceArray.length)];
-    let quoteAuthor = "Unknown";
+    const useDefaultQuote = Math.random() < 0.5 || totalQuotes === 0;
+    let randomQuote, quoteAuthor;
 
-    if (sourceArray !== defaultQuotes) {
+    if (useDefaultQuote) {
+      randomQuote =
+        defaultQuotes[Math.floor(Math.random() * defaultQuotes.length)];
+      quoteAuthor = randomQuote.author || "Unknown";
+    } else {
+      const randomDbQuote = await Quote.aggregate([{ $sample: { size: 1 } }]);
+      randomQuote = randomDbQuote[0];
       try {
         const user = await User.findOne({ userID: randomQuote.userID });
-        if (user) {
-          quoteAuthor = user.username;
-        }
+        quoteAuthor = user ? user.username : "Unknown";
       } catch (error) {
         console.error("Error fetching user:", error);
+        quoteAuthor = "Unknown";
       }
     }
 
@@ -49,6 +48,7 @@ module.exports = async (client) => {
         > *"${randomQuote.quoteName}"*
         
         🎭 **Author:** ${quoteAuthor}
+        ${!useDefaultQuote ? `👤 **Added by:** ${randomQuote.userID}` : ""}
       `
       )
       .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 256 }))

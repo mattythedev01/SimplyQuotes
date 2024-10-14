@@ -80,22 +80,39 @@ async function emitReadyEvent(client) {
 
 async function emitQuoteEvent(client) {
   const setups = await QuoteSetup.find({});
-  const allQuotes = await Quote.find({});
+  let totalQuotes = await Quote.countDocuments({});
 
-  const sourceArray = allQuotes.length > 0 ? allQuotes : defaultQuotes;
-  const randomQuote =
-    sourceArray[Math.floor(Math.random() * sourceArray.length)];
+  // Randomly select a quote from either user quotes or default quotes
+  const useDefaultQuote = Math.random() < 0.5 || totalQuotes === 0;
+  let randomQuote, quoteAuthor;
 
-  let quoteAuthor = "Unknown";
-  if (sourceArray !== defaultQuotes) {
-    try {
-      const user = await User.findOne({ userID: randomQuote.userID });
-      if (user) {
-        quoteAuthor = user.username;
+  if (useDefaultQuote) {
+    randomQuote =
+      defaultQuotes[Math.floor(Math.random() * defaultQuotes.length)];
+    quoteAuthor = randomQuote.author || "Unknown";
+  } else {
+    const randomDbQuote = await Quote.aggregate([{ $sample: { size: 1 } }]);
+    if (randomDbQuote && randomDbQuote.length > 0) {
+      randomQuote = randomDbQuote[0];
+      try {
+        const user = await User.findOne({ userID: randomQuote.userID });
+        quoteAuthor = user ? user.username : "Unknown";
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        quoteAuthor = "Unknown";
       }
-    } catch (error) {
-      console.error("Error fetching user:", error);
+    } else {
+      // Fallback to default quote if no quotes in the database
+      randomQuote =
+        defaultQuotes[Math.floor(Math.random() * defaultQuotes.length)];
+      quoteAuthor = randomQuote.author || "Unknown";
     }
+  }
+
+  // Ensure randomQuote is defined
+  if (!randomQuote) {
+    console.error("Failed to retrieve a quote");
+    return;
   }
 
   const quoteEmbed = new EmbedBuilder()
@@ -103,16 +120,27 @@ async function emitQuoteEvent(client) {
     .setTitle(`✨ Daily Quotes! ✨`)
     .setDescription(
       `
-      📜 **A ${randomQuote.category} Quote**
+      📜 **A ${randomQuote.category || "Uncategorized"} Quote**
       
-      > *"${randomQuote.quoteName}"*
+      > *"${
+        randomQuote.quoteName || randomQuote.quote || "No quote available"
+      }"*
       
-      🎭 **Author:** ${quoteAuthor}
+      🎭 **Author:** ${quoteAuthor || "Unknown"}
+      ${
+        !useDefaultQuote && randomQuote.userID
+          ? `👤 **Added by:** ${randomQuote.userID}`
+          : ""
+      }
     `
     )
     .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 256 }))
     .addFields(
-      { name: "📚 Category", value: randomQuote.category, inline: true },
+      {
+        name: "📚 Category",
+        value: randomQuote.category || "Uncategorized",
+        inline: true,
+      },
       { name: "🕰️ Shared At", value: new Date().toLocaleString(), inline: true }
     )
     .setFooter({
@@ -129,15 +157,13 @@ async function emitQuoteEvent(client) {
         messageContent.content = `<@&${setup.roleID}> Today's quote has arrived! 🌟`;
       }
       await channel.send(messageContent);
-    }
-  }
 
-  // Update LastQuote for each guild
-  for (const setup of setups) {
-    await LastQuote.findOneAndUpdate(
-      { guildID: setup.guildID },
-      { lastSentQuote: new Date() },
-      { upsert: true }
-    );
+      // Log the last sent quote
+      await LastQuote.findOneAndUpdate(
+        { guildID: setup.guildID },
+        { lastSentQuote: new Date() },
+        { upsert: true }
+      );
+    }
   }
 }
