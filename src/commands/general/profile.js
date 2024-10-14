@@ -41,11 +41,18 @@ module.exports = {
         await userData.save();
       }
 
-      // Get total ratings and average rating from userSchema
-      const totalRatings = userData.TotalRatings || 0;
-      const avgRating = userData.averageRating
-        ? userData.averageRating.toFixed(2)
-        : "N/A";
+      // Get all ratings for the user
+      const userRatings = await ratingSchema.find({ userID: user.id });
+
+      // Calculate total ratings and average rating
+      const totalRatings = userRatings.length;
+      const avgRating =
+        totalRatings > 0
+          ? (
+              userRatings.reduce((sum, rating) => sum + rating.rating, 0) /
+              totalRatings
+            ).toFixed(2)
+          : "N/A";
 
       // Get latest quote
       const latestQuote = await quoteSchema
@@ -62,20 +69,18 @@ module.exports = {
       let topRatedQuoteRating = "Not rated yet";
 
       if (latestQuote) {
-        const latestRating = await ratingSchema.findOne({
-          quoteID: latestQuote.quoteID,
-          userID: user.id,
-        });
+        const latestRating = userRatings.find(
+          (rating) => rating.quoteID === latestQuote.quoteID
+        );
         if (latestRating) {
           latestQuoteRating = `${latestRating.rating.toFixed(1)} / 5.0`;
         }
       }
 
       if (topRatedQuote) {
-        const topRating = await ratingSchema.findOne({
-          quoteID: topRatedQuote.quoteID,
-          userID: user.id,
-        });
+        const topRating = userRatings.find(
+          (rating) => rating.quoteID === topRatedQuote.quoteID
+        );
         if (topRating) {
           topRatedQuoteRating = `${topRating.rating.toFixed(1)} / 5.0`;
         }
