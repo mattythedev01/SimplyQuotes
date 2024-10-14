@@ -1,4 +1,5 @@
 {
-  "Streaks": "Streaks will be coming to SimplyQuote. Everytime you add a quote, and it gets approved, you'll get 1 point added to your streak. You'll also be able to view it on a command soon.",
+  "Streaks": "Streaks are now implemented! Everytime you add a quote, and it gets approved, you'll get 1 point added to your streak.",
+  "Badges": "Badges are now available to earn! Only badges currently, are staff badge for the developers and Quote Reviewers of SimplyQuote! Another badge is the streak badge which you will get if you have a ongoing streak.",
   "QOTD": "It'll allow you to setup a QOTD in your server, but after 24 hours, the QOTD wont be sent. WERE WORKING ON THIS!"
 }

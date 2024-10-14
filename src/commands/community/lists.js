@@ -6,19 +6,21 @@ const {
   ButtonStyle,
 } = require("discord.js");
 const Quote = require("../../schemas/qoutesSchema");
+const badges = require("../../badges.json").badges;
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("lists")
-    .setDescription("Lists quotes or authors with pagination.")
+    .setDescription("Lists quotes, authors, or badges with pagination.")
     .addStringOption((option) =>
       option
         .setName("type")
-        .setDescription("Choose to list quotes or authors")
+        .setDescription("Choose to list quotes, authors, or badges")
         .setRequired(true)
         .addChoices(
           { name: "Quotes", value: "quotes" },
-          { name: "Authors", value: "authors" }
+          { name: "Authors", value: "authors" },
+          { name: "Badges", value: "badges" }
         )
     )
     .addIntegerOption((option) =>
@@ -44,8 +46,16 @@ module.exports = {
           pageSize,
           skip
         );
-      } else {
+      } else if (type === "authors") {
         await module.exports.listAuthors(
+          client,
+          interaction,
+          page,
+          pageSize,
+          skip
+        );
+      } else if (type === "badges") {
+        await module.exports.listBadges(
           client,
           interaction,
           page,
@@ -54,7 +64,7 @@ module.exports = {
         );
       }
     } catch (err) {
-      console.error("[ERROR] Error in the listquotes command:", err);
+      console.error("[ERROR] Error in the lists command:", err);
       await interaction.reply({
         content: "An error occurred while executing the command.",
         ephemeral: true,
@@ -135,6 +145,40 @@ module.exports = {
       page,
       totalPages,
       "authors"
+    );
+  },
+
+  listBadges: async (client, interaction, page, pageSize, skip) => {
+    const totalBadges = badges.length;
+    const totalPages = Math.ceil(totalBadges / pageSize);
+
+    if (totalBadges === 0) {
+      return interaction.reply({
+        content: "No badges found in the database.",
+        ephemeral: true,
+      });
+    }
+
+    const paginatedBadges = badges.slice(skip, skip + pageSize);
+
+    const badgeDescriptions = paginatedBadges.map((badge, index) => {
+      return `${skip + index + 1}. ${badge.emoji} **${badge.name}**\n> ${
+        badge.description
+      }`;
+    });
+
+    const embed = new EmbedBuilder()
+      .setColor("#FFD700")
+      .setTitle(`Badges (Page ${page}/${totalPages})`)
+      .setDescription(badgeDescriptions.join("\n\n"))
+      .setTimestamp();
+
+    await module.exports.sendPaginatedEmbed(
+      interaction,
+      embed,
+      page,
+      totalPages,
+      "badges"
     );
   },
 

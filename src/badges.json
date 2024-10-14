@@ -2,11 +2,13 @@
   "badges": [
     {
       "name": "Staff",
-      "emoji": "<:Staff1:1293960445614493826>"
+      "emoji": "<:Staff1:1293960445614493826>",
+      "description": "For the lovely people who help the developers with the reviewing and developing of SimplyQuote"
     },
     {
       "name": "Ongoingstreak",
-      "emoji": "<:flame:1293960724892094667>"
+      "emoji": "<:flame:1293960724892094667>",
+      "description": "Obtain this badge by having a 10+ day ongoing streak of uploading quotes!"
     }
   ]
 }

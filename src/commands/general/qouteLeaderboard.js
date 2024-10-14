@@ -1,12 +1,14 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../../schemas/userSchema");
-const tips = require("../../tip.json"); // Import the tips.json file
+const Rating = require("../../schemas/ratingSchema");
+const tips = require("../../tip.json");
+const badges = require("../../badges.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("quoteleaderboard")
     .setDescription(
-      "Displays a leaderboard of users with the most quotes and highest ratings."
+      "Unveil the pantheon of quote masters and their celestial ratings."
     )
     .toJSON(),
   testMode: false,
@@ -17,43 +19,70 @@ module.exports = {
 
   run: async (client, interaction) => {
     try {
-      // Aggregate quotes to count per user, sum ratings, and sort by count and ratings in descending order
       const leaderboard = await User.aggregate([
+        {
+          $lookup: {
+            from: "ratings",
+            localField: "userID",
+            foreignField: "userID",
+            as: "ratings",
+          },
+        },
         {
           $group: {
             _id: "$userID",
-            totalQuotes: { $sum: 1 },
-            totalRatings: { $sum: "$rating" },
+            totalQuotes: { $sum: "$numberOfQuotes" },
+            totalRatings: { $sum: { $size: "$ratings" } },
+            avgRating: { $avg: "$ratings.rating" },
           },
         },
-        { $sort: { totalQuotes: -1, totalRatings: -1 } },
-        { $limit: 10 }, // Limit to top 10 users
+        { $sort: { totalQuotes: -1, avgRating: -1 } },
+        { $limit: 10 },
       ]);
 
       if (leaderboard.length === 0) {
         await interaction.reply({
-          content: "No quotes found in the database.",
+          content:
+            "The cosmic library awaits its first scribes. Be the pioneer!",
           ephemeral: true,
         });
         return;
       }
 
-      // Fetch usernames for each user ID in the leaderboard
-      const leaderboardWithNames = await Promise.all(
-        leaderboard.map(async (entry) => {
+      const leaderboardWithDetails = await Promise.all(
+        leaderboard.map(async (entry, index) => {
           const user = await client.users.fetch(entry._id);
-          return `${user.username}: ${entry.totalQuotes} quotes, ${entry.totalRatings} ratings`;
+          const userData = await User.findOne({ userID: entry._id });
+          const badgeEmojis = userData.Badges.map((badgeName) => {
+            const badge = badges.badges.find((b) => b.name === badgeName);
+            return badge ? badge.emoji : "";
+          }).join(" ");
+
+          return {
+            name: `${index + 1}. ${user.username}`,
+            value: `Quotes: ${entry.totalQuotes} | Avg Rating: ${
+              entry.avgRating ? entry.avgRating.toFixed(2) : "N/A"
+            } ⭐\nStreak: ${userData.streaks} 🔥 | Badges: ${
+              badgeEmojis || "None yet"
+            }`,
+            inline: false,
+          };
         })
       );
 
       const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
       const embed = new EmbedBuilder()
-        .setColor("#0099ff")
-        .setTitle("Quote Leaderboard")
-        .setDescription(leaderboardWithNames.join("\n"))
+        .setColor("#4A5EAD")
+        .setTitle("🏆 Quotation Pantheon: Masters of Wisdom 🏆")
+        .setDescription(
+          "Behold the luminaries whose words light up our cosmic library!"
+        )
+        .addFields(leaderboardWithDetails)
+        .setThumbnail(interaction.guild.iconURL({ dynamic: true, size: 256 }))
         .setFooter({
-          text: `Tip: ${randomTip}`, // Use the random tip in the footer
+          text: `💡 Sage Wisdom: ${randomTip}`,
+          iconURL: client.user.displayAvatarURL({ dynamic: true }),
         })
         .setTimestamp();
 
@@ -67,7 +96,8 @@ module.exports = {
         err
       );
       await interaction.reply({
-        content: "An error occurred while executing the command.",
+        content:
+          "The cosmic energies are misaligned. Our sage librarians are working to restore balance. Please try again later.",
         ephemeral: true,
       });
     }

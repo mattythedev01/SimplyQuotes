@@ -18,7 +18,7 @@ module.exports = {
 
   run: async (client, interaction) => {
     const noticeFields = Object.entries(notices).map(([key, value]) => ({
-      name: `**${key.toUpperCase().replace(/_/g, " ")}**`,
+      name: `🔔 ${key.toUpperCase().replace(/_/g, " ")}`,
       value: `> ${value}`,
       inline: false,
     }));
@@ -27,26 +27,29 @@ module.exports = {
 
     const noticeEmbed = new EmbedBuilder()
       .setColor("#FFA500")
-      .setTitle("📢 Current Notices")
+      .setTitle("📢 Bulletin Board")
       .setDescription(
-        "Stay updated with the latest information and alerts about the bot."
+        "Greetings, stargazer! 🌟 Tune in to the latest transmissions from across the SimplyQuote universe. These notices are your guide to navigating our ever-expanding galaxy of wisdom!"
       )
       .addFields(noticeFields)
+      .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 256 }))
       .setFooter({
-        text: `Tip: ${randomTip}`,
+        text: `💫 Celestial Wisdom: ${randomTip}`,
         iconURL: client.user.displayAvatarURL(),
       })
       .setTimestamp();
 
     const buttons = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-        .setLabel("Invite")
+        .setLabel("Invite SimplyQuote")
         .setStyle(ButtonStyle.Link)
-        .setURL("https://top.gg/bot/1292737804530356224"),
+        .setURL("https://top.gg/bot/1292737804530356224")
+        .setEmoji("🚀"),
       new ButtonBuilder()
-        .setLabel("Support")
+        .setLabel("Join Our Support Server")
         .setStyle(ButtonStyle.Link)
         .setURL("https://discord.gg/4zaaRkTPZE")
+        .setEmoji("🌠")
     );
 
     await interaction.reply({

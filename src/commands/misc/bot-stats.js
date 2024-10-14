@@ -1,12 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const quoteSchema = require("../../schemas/qoutesSchema"); // Updated to use quoteSchema
-const defaultQuotes = require("../../defaultQuotes.json"); // Path to defaultQuotes.json
-const tips = require("../../tip.json"); // Import the tips.json file
+const quoteSchema = require("../../schemas/qoutesSchema");
+const defaultQuotes = require("../../defaultQuotes.json");
+const tips = require("../../tip.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("bot-stats")
-    .setDescription("Get statistics about the bot")
+    .setDescription("Unveil the cosmic tapestry of our bot's journey")
     .toJSON(),
   userPermissions: [],
   botPermissions: [],
@@ -17,27 +17,42 @@ module.exports = {
       (acc, guild) => acc + guild.memberCount,
       0
     );
-    const totalQuotes = await quoteSchema.countDocuments(); // Updated to use quoteSchema
-    const totalDefaultQuotes = defaultQuotes.length; // Get the total number of default quotes
+    const totalQuotes = await quoteSchema.countDocuments();
+    const totalDefaultQuotes = defaultQuotes.length;
     const randomTip = tips.tips[Math.floor(Math.random() * tips.tips.length)];
 
     const statsEmbed = new EmbedBuilder()
-      .setColor("#4A5EAD")
-      .setTitle("🤖 Bot Statistics 📊")
-      .setDescription("Here's a quick glance at some cool stats")
+      .setColor("#1E90FF")
+      .setTitle("Bot Statistics 🚀")
+      .setDescription(
+        "Embark on a journey through the celestial tapestry of our bot's universe!"
+      )
       .addFields(
-        { name: "🏠 Guilds", value: `${totalGuilds}`, inline: true },
-        { name: "👥 Members", value: `${totalMembers}`, inline: true },
-        { name: "💬 Community Quotes", value: `${totalQuotes}`, inline: true },
         {
-          name: "📜 Default Quotes",
-          value: `${totalDefaultQuotes}`,
+          name: "🏰 Realms Enlightened",
+          value: `\`\`\`${totalGuilds.toLocaleString()}\`\`\``,
+          inline: true,
+        },
+        {
+          name: "👥 Starfarers United",
+          value: `\`\`\`${totalMembers.toLocaleString()}\`\`\``,
+          inline: true,
+        },
+        {
+          name: "💬 Cosmic Whispers",
+          value: `\`\`\`${totalQuotes.toLocaleString()}\`\`\``,
+          inline: true,
+        },
+        {
+          name: "📜 Primordial Wisdom",
+          value: `\`\`\`${totalDefaultQuotes.toLocaleString()}\`\`\``,
           inline: true,
         }
       )
+      .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 512 }))
       .setFooter({
-        text: `Tip: ${randomTip}`, // Use the random tip in the footer
-        iconURL: client.user.displayAvatarURL(),
+        text: `💫 Astral Insight: ${randomTip}`,
+        iconURL: client.user.displayAvatarURL({ dynamic: true }),
       })
       .setTimestamp();
 
