@@ -35,8 +35,48 @@ module.exports = {
         );
       });
 
-      let currentPage = 0;
-      const totalPages = commandFolders.length;
+      let currentPage = -1; // Start with -1 to represent the category page
+
+      const generateCategoryEmbed = () => {
+        const categoriesString = commandFolders
+          .map(
+            (folder, index) =>
+              `> **${index + 1}. ${
+                folder.charAt(0).toUpperCase() + folder.slice(1)
+              }**`
+          )
+          .join("\n");
+
+        // Load tips from tip.json
+        const tips = require("../../tip.json").tips;
+        const randomTip = tips[Math.floor(Math.random() * tips.length)];
+
+        return new EmbedBuilder()
+          .setColor("#4B0082") // Indigo color for a more sophisticated look
+          .setTitle("📚 SimplyQuotes Command Compendium")
+          .setDescription(
+            "Welcome, seeker of wisdom! 🌟\n\nEmbark on a journey through the realms of SimplyQuotes. Each category below is a treasure trove of inspiration and knowledge. What intellectual adventure shall we undertake today?"
+          )
+          .addFields(
+            {
+              name: "🔍 Explore Categories",
+              value:
+                categoriesString ||
+                "Our categories are currently on a philosophical retreat. Check back soon!",
+              inline: false,
+            },
+            {
+              name: "💡 Wisdom of the Moment",
+              value: `*"${randomTip}"*`,
+              inline: false,
+            }
+          )
+          .setThumbnail(client.user.displayAvatarURL())
+          .setFooter({
+            text: "SimplyQuotes - Enlightening minds, one command at a time",
+          })
+          .setTimestamp();
+      };
 
       const generateHelpEmbed = (page) => {
         const folder = commandFolders[page];
@@ -49,45 +89,57 @@ module.exports = {
         const tips = require("../../tip.json").tips;
         const randomTip = tips[Math.floor(Math.random() * tips.length)];
 
-        const helpEmbed = new EmbedBuilder()
+        return new EmbedBuilder()
           .setColor("#FFD700") // Gold color
-          .setTitle(`✨ ${folder.toUpperCase()} COMMANDS ✨`)
+          .setTitle(
+            `${folder.charAt(0).toUpperCase() + folder.slice(1)} Commands`
+          )
           .setDescription(
-            "Explore the amazing commands SimplyQuotes has to offer!"
+            `Here are all the commands in the ${folder} category:`
           )
           .addFields({
-            name: "📜 Available Commands",
+            name: "Commands",
             value: commandsString || "No commands available.",
           })
           .setThumbnail(client.user.displayAvatarURL())
           .setFooter({
-            text: `Page ${page + 1} of ${totalPages} | 💡${randomTip}`,
+            text: `Tip: ${randomTip}`,
             iconURL: client.user.displayAvatarURL(),
           })
           .setTimestamp();
-
-        return helpEmbed;
       };
 
-      const helpEmbed = generateHelpEmbed(currentPage);
+      const generateButtons = () => {
+        const buttons = commandFolders.map((folder, index) =>
+          new ButtonBuilder()
+            .setCustomId(`category_${index}`)
+            .setLabel(folder.charAt(0).toUpperCase() + folder.slice(1))
+            .setStyle(ButtonStyle.Secondary)
+        );
 
-      const prevButton = new ButtonBuilder()
-        .setCustomId("prev")
-        .setLabel("◀️ Previous")
-        .setStyle(ButtonStyle.Secondary)
-        .setDisabled(currentPage === 0);
+        const homeButton = new ButtonBuilder()
+          .setCustomId("home")
+          .setLabel("🏠 Home")
+          .setStyle(ButtonStyle.Primary);
 
-      const nextButton = new ButtonBuilder()
-        .setCustomId("next")
-        .setLabel("Next ▶️")
-        .setStyle(ButtonStyle.Secondary)
-        .setDisabled(currentPage === totalPages - 1);
+        buttons.unshift(homeButton);
 
-      const row = new ActionRowBuilder().addComponents(prevButton, nextButton);
+        return buttons;
+      };
+
+      const initialEmbed = generateCategoryEmbed();
+      const buttons = generateButtons();
+
+      const rows = [];
+      for (let i = 0; i < buttons.length; i += 5) {
+        rows.push(
+          new ActionRowBuilder().addComponents(buttons.slice(i, i + 5))
+        );
+      }
 
       const message = await interaction.reply({
-        embeds: [helpEmbed],
-        components: [row],
+        embeds: [initialEmbed],
+        components: rows,
         ephemeral: false,
       });
 
@@ -97,28 +149,31 @@ module.exports = {
       });
 
       collector.on("collect", async (i) => {
-        if (i.customId === "prev") {
-          currentPage--;
-        } else if (i.customId === "next") {
-          currentPage++;
+        if (i.customId === "home") {
+          currentPage = -1;
+          await i.update({
+            embeds: [generateCategoryEmbed()],
+            components: rows,
+          });
+        } else if (i.customId.startsWith("category_")) {
+          currentPage = parseInt(i.customId.split("_")[1]);
+          const updatedHelpEmbed = generateHelpEmbed(currentPage);
+          await i.update({
+            embeds: [updatedHelpEmbed],
+            components: rows,
+          });
         }
-
-        const updatedHelpEmbed = generateHelpEmbed(currentPage);
-        prevButton.setDisabled(currentPage === 0);
-        nextButton.setDisabled(currentPage === totalPages - 1);
-
-        await i.update({
-          embeds: [updatedHelpEmbed],
-          components: [row],
-        });
       });
 
       collector.on("end", async () => {
-        prevButton.setDisabled(true);
-        nextButton.setDisabled(true);
+        for (const row of rows) {
+          for (const button of row.components) {
+            button.setDisabled(true);
+          }
+        }
 
         await interaction.editReply({
-          components: [row],
+          components: rows,
         });
       });
     } catch (err) {
