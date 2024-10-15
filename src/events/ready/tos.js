@@ -98,8 +98,25 @@ module.exports = async (client) => {
 
     // If TosAgreement is true, allow the command to proceed
     try {
+      if (!client.commands) {
+        console.error("client.commands is undefined");
+        await interaction.reply({
+          content:
+            "There was an error while executing this command. The bot is not fully initialized.",
+          ephemeral: true,
+        });
+        return;
+      }
+
       const command = client.commands.get(interaction.commandName);
-      if (!command) return;
+      if (!command) {
+        console.error(`Command not found: ${interaction.commandName}`);
+        await interaction.reply({
+          content: "This command doesn't exist.",
+          ephemeral: true,
+        });
+        return;
+      }
       await command.run(client, interaction);
     } catch (error) {
       console.error(error);
