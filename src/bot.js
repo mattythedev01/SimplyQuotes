@@ -1,6 +1,6 @@
-require("dotenv/config");
 const { Client, GatewayIntentBits, EmbedBuilder } = require("discord.js");
 const eventHandler = require("./handlers/eventHandler");
+require("dotenv").config();
 
 const client = new Client({
   intents: [
@@ -51,4 +51,6 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.TOKEN);
+
+module.exports = client;
