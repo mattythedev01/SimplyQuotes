@@ -74,6 +74,7 @@ module.exports = {
         DmAuthorized: null,
         Authorized: true,
         Badges: ["None"],
+        TosAgreement: false,
       });
     } else {
       user.numberOfQuotes += 1;

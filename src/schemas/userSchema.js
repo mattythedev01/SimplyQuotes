@@ -15,6 +15,7 @@ const userSchema = new Schema({
     min: 0,
     max: 100,
   },
+  TosAgreement: Boolean,
 });
 
 module.exports = model("User", userSchema);
