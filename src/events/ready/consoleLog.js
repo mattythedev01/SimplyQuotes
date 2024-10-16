@@ -45,10 +45,10 @@ module.exports = async (client) => {
         `
         📜 **A ${randomQuote.category} Quote**
         
-        > *"${randomQuote.quoteName}"*
+        > *"${randomQuote.quoteName || randomQuote.quote}"*
         
         🎭 **Author:** ${quoteAuthor}
-        ${!useDefaultQuote ? `👤 **Added by:** ${randomQuote.userID}` : ""}
+        ${!useDefaultQuote ? `👤 **Added by:** <@${randomQuote.userID}>` : ""}
       `
       )
       .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 256 }))
